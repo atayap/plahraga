@@ -19,7 +19,7 @@ jobs:
       - name: Create Firebase Config File 🤫
         run: |
           mkdir -p js
-          echo '
+          cat <<EOF > js/firebase-config.js
           // Import functions from the SDKs
           import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
           import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -44,7 +44,7 @@ jobs:
           const storage = getStorage(app);
 
           export { db, auth, storage };
-          ' > js/firebase-config.js
+EOF
 
       - name: Remove .gitignore before deploy 🗑️
         run: rm .gitignore
