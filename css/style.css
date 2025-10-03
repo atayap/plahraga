@@ -303,6 +303,13 @@ body {
     padding: 4rem 0;
 }
 
+/* Make text inside featured product cards white for homepage visibility */
+.featured-products .product-info h3,
+.featured-products .product-info .product-category,
+.featured-products .product-info .product-price {
+    color: #fff;
+}
+
 .section-title {
     text-align: center;
     font-size: 2.2rem;
