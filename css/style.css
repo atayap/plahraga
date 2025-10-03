@@ -304,6 +304,7 @@ body {
 }
 
 /* Make text inside featured product cards white for homepage visibility */
+.featured-products .section-title,
 .featured-products .product-info h3,
 .featured-products .product-info .product-category,
 .featured-products .product-info .product-price {
@@ -678,6 +679,10 @@ body.loading .footer {
 .bag-page {
     margin-top: 100px;
     padding: 2rem 0;
+}
+
+.bag-page .section-title {
+    color: #fff;
 }
 
 .bag-item {
