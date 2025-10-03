@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - StyleShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <style>
+        /* Admin Panel Specific Styles */
+
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .admin-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.7rem 1.5rem;
+            background-color: transparent;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            color: var(--text-color);
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .logout-btn {
+            background-color: var(--secondary); /* Changed from --danger for consistency */
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background-color: #e64a19; /* Darker shade of secondary */
+        }
+
+        .admin-content {
+            padding: 2rem 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+
+        .card h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+        
+        .form-control, .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .form-control:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload p {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .preview-item img,
+        .preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .banner-size-info {
+            background-color: rgba(108, 99, 255, 0.1); /* Use primary with alpha */
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+            color: var(--text-color);
+        }
+
+        .banner-size-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .products-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .banners-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-item, .banner-item {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .banner-image {
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .product-image img, .banner-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info, .banner-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3, .banner-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loader" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+    </div>
+
+    <!-- Access Denied -->
+    <div id="accessDenied" style="display: none; text-align: center; padding: 2rem;">
+        <h2><i class="fas fa-exclamation-triangle"></i> Akses Ditolak</h2>
+        <p>Anda tidak memiliki hak untuk mengakses halaman ini.</p>
+        <a href="index.html" class="btn btn-primary" style="margin-top: 1rem;">Kembali ke Home</a>
+    </div>
+
+    <!-- Admin Panel -->
+    <section class="admin-panel" id="adminPanel">
+        <header class="admin-header">
+            <div class="container">
+                <div class="admin-nav">
+                    <div class="admin-logo">Admin Panel - StyleShop</div>
+                    <div class="admin-tabs">
+                        <button class="tab-btn active" data-tab="products">Kelola Produk</button>
+                        <button class="tab-btn" data-tab="banners">Kelola Banner</button>
+                    </div>
+                    <div class="admin-actions" style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <div class="container">
+                <!-- Alert Messages -->
+                <div class="alert alert-success" id="successAlert">Operasi berhasil disimpan!</div>
+                <div class="alert alert-error" id="errorAlert">Terjadi kesalahan. Silakan coba lagi.</div>
+
+                <!-- Tab: Kelola Produk -->
+                <div class="tab-content active" id="productsTab">
+                    <div class="card">
+                        <h2 id="productFormTitle"><i class="fas fa-plus-circle"></i> Tambah Produk Baru</h2>
+                        <form id="productForm">
+                            <input type="hidden" id="productIdToEdit">
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="productName">Nama Produk</label>
+                                        <input type="text" id="productName" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="productCategory">Kategori</label>
+                                        <select id="productCategory" class="form-control" required>
+                                            <option value="">Pilih Kategori</option>
+                                            <option value="alat-olahraga">Alat Olahraga</option>
+                                            <option value="pakaian-olahraga">Pakaian Olahraga</option>
+                                            <option value="sepatu-sport">Sepatu Sport</option>
+                                            <option value="aksesoris-olahraga">Aksesoris Olahraga</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="productPrice">Harga (Rp)</label>
+                                        <input type="number" id="productPrice" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="productOriginalPrice">Harga Asli (Rp) - Opsional</label>
+                                        <input type="number" id="productOriginalPrice" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="productRating">Rating (0-5, contoh: 4.5)</label>
+                                        <input type="number" id="productRating" class="form-control" min="0" max="5" step="0.1">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Deskripsi Produk</label>
+                                <div id="quill-editor" style="height: 250px;"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="productLink">Link Affiliate Shopee</label>
+                                <input type="url" id="productLink" class="form-control" required placeholder="https://...">
+                            </div>
+
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" id="isFeatured" style="width: 20px; height: 20px;">
+                                    Jadikan Produk Unggulan (tampil di halaman utama)
+                                </label>
+                            </div>
+
+                            <div class="form-group" id="imageLinkGroup">
+                                <label>Link Gambar Produk (Minimal 1, Maksimal 5)<br><small style="font-weight: normal; color: #6c757d;">Rekomendasi ukuran gambar: 800x800 piksel</small></label>
+                                <div id="imageLinksContainer">
+                                    <div class="image-link-input-wrapper" style="margin-bottom: 10px;">
+                                        <input type="url" name="productImageLinks" class="form-control image-link-input" placeholder="https://... (Gambar Utama)" required>
+                                    </div>
+                                </div>
+                                <button type="button" id="addImageLinkBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ Tambah Link Gambar</button>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary">Simpan Produk</button>
+                            <button type="button" id="cancelEditBtn" class="btn btn-secondary" style="display: none; margin-left: 10px;">Batal Edit</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h2><i class="fas fa-boxes"></i> Daftar Produk</h2>
+                        <div class="products-list" id="productsList">
+                            <!-- Daftar produk akan ditampilkan di sini -->
+                        </div>
+                        <div class="pagination-controls" style="text-align: center; margin-top: 2rem;">
+                            <button id="prevPageBtn" class="btn btn-secondary" disabled>Sebelumnya</button>
+                            <span id="pageInfo" style="margin: 0 1rem; display: inline-block; vertical-align: middle;">Halaman 1</span>
+                            <button id="nextPageBtn" class="btn btn-secondary" disabled>Berikutnya</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Kelola Banner -->
+                <div class="tab-content" id="bannersTab">
+                    <div class="card">
+                        <h2><i class="fas fa-image"></i> Tambah Banner Baru</h2>
+                        
+                        <div class="banner-size-info">
+                            <h4><i class="fas fa-info-circle"></i> Informasi Ukuran Banner</h4>
+                            <p>Rekomendasi ukuran gambar untuk banner adalah <strong>1200x400 piksel</strong>.</p>
+                        </div>
+                        <form id="bannerForm">
+                            <div class="form-group">
+                                <label for="bannerTitle">Judul Banner</label>
+                                <input type="text" id="bannerTitle" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bannerDescription">Deskripsi Banner</label>
+                                <textarea id="bannerDescription" class="form-control" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bannerLink">Link Tujuan (Opsional)</label>
+                                <input type="url" id="bannerLink" class="form-control" placeholder="https://...">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bannerImageUrl">Link Gambar Banner</label>
+                                <input type="url" id="bannerImageUrl" class="form-control" placeholder="https://..." required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Simpan Banner</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h2><i class="fas fa-images"></i> Daftar Banner</h2>
+                        <div class="banners-list" id="bannersList">
+                            <!-- Daftar banner akan ditampilkan di sini -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="module">
+        import { auth, db, storage } from './js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { doc, getDoc, collection, addDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, query, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+
+        const loader = document.getElementById('loader');
+        const adminPanel = document.getElementById('adminPanel');
+        const accessDenied = document.getElementById('accessDenied');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists() && userDoc.data().role === 'admin') {
+                    loader.style.display = 'none';
+                    adminPanel.style.display = 'block';
+                    initializeAdminPanel();
+                } else {
+                    loader.style.display = 'none';
+                    accessDenied.style.display = 'block';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = 'login.html';
+            }).catch((error) => {
+                console.error('Logout Error:', error);
+            });
+        });
+
+        // --- Main Admin Panel Logic ---
+        function initializeAdminPanel() {
+            const successAlert = document.getElementById('successAlert');
+            const errorAlert = document.getElementById('errorAlert');
+
+            const showAlert = (alertElement, message, isSuccess = true) => {
+                alertElement.textContent = message;
+                alertElement.className = isSuccess ? 'alert alert-success' : 'alert alert-error';
+                alertElement.style.display = 'block';
+                window.scrollTo(0, 0);
+                setTimeout(() => {
+                    alertElement.style.display = 'none';
+                }, 5000);
+            };
+
+            const truncateText = (text, wordLimit) => {
+                if (!text) return '';
+                const words = text.split(' ');
+                if (words.length > wordLimit) {
+                    return words.slice(0, wordLimit).join(' ') + '...';
+                }
+                return text;
+            };
+
+            // --- Quill Editor ---
+            const quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['link', 'image'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // --- Tab Switching ---
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(tabId + 'Tab').classList.add('active');
+                });
+            });
+
+            const productsList = document.getElementById('productsList');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const pageInfo = document.getElementById('pageInfo');
+            
+            let currentPage = 1;
+            let lastVisible = null;
+            let pageFirstDocs = [null]; // Array to store the first doc of each page for 'prev' logic
+            const productsPerPage = 12;
+
+            async function loadProducts(direction = null) {
+                productsList.innerHTML = '<p>Memuat produk...</p>';
+                let productQuery;
+
+                if (direction === 'next' && lastVisible) {
+                    currentPage++;
+                    productQuery = query(collection(db, "products"), orderBy("createdAt", "desc"), startAfter(lastVisible), limit(productsPerPage));
+                } else if (direction === 'prev' && currentPage > 1) {
+                    currentPage--;
+                    productQuery = query(collection(db, "products"), orderBy("createdAt", "desc"), startAfter(pageFirstDocs[currentPage - 1]), limit(productsPerPage));
+                } else {
+                    currentPage = 1;
+                    pageFirstDocs = [null];
+                    lastVisible = null;
+                    productQuery = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(productsPerPage));
+                }
+
+                const querySnapshot = await getDocs(productQuery);
+                productsList.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    productsList.innerHTML = '<p>Belum ada produk.</p>';
+                    prevPageBtn.disabled = currentPage <= 1;
+                    nextPageBtn.disabled = true;
+                    pageInfo.textContent = `Halaman ${currentPage}`;
+                    return;
+                }
+
+                // Store the first document of the current page for 'prev' navigation
+                const firstDoc = querySnapshot.docs[0];
+                if (currentPage >= pageFirstDocs.length) {
+                    pageFirstDocs.push(firstDoc);
+                }
+
+                lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+                querySnapshot.forEach(doc => {
+                    const product = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'product-item';
+                    const isFeaturedText = product.isFeatured ? 'Unggulan' : 'Reguler';
+                    const toggleButtonText = product.isFeatured ? 'Hapus dari Unggulan' : 'Jadikan Unggulan';
+                    const toggleButtonClass = product.isFeatured ? 'btn-secondary' : 'btn-success';
+
+                    item.innerHTML = `
+                        <div class="product-image"><img src="${product.images[0]}" alt="${product.name}"></div>
+                        <div class="product-info">
+                            <h3 title="${product.name}">${truncateText(product.name, 5)}</h3>
+                            <p>${product.category} | <b>Status: ${isFeaturedText}</b></p>
+                            <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                            <div class="product-actions">
+                                <button class="action-btn ${toggleButtonClass}" onclick="window.toggleFeaturedStatus('${doc.id}', ${product.isFeatured})">${toggleButtonText}</button>
+                                <button class="action-btn btn-primary" onclick="window.editProduct('${doc.id}')">Edit</button>
+                            </div>
+                        </div>`;
+                    productsList.appendChild(item);
+                });
+
+                // Update pagination controls
+                pageInfo.textContent = `Halaman ${currentPage}`;
+                prevPageBtn.disabled = currentPage <= 1;
+                nextPageBtn.disabled = querySnapshot.docs.length < productsPerPage;
+            }
+
+            nextPageBtn.addEventListener('click', () => loadProducts('next'));
+            prevPageBtn.addEventListener('click', () => loadProducts('prev'));
+
+            const toggleFeaturedStatus = async (id, currentStatus) => {
+                const productRef = doc(db, 'products', id);
+                try {
+                    await updateDoc(productRef, {
+                        isFeatured: !currentStatus
+                    });
+                    showAlert(successAlert, 'Status produk berhasil diubah!');
+                    loadProducts();
+                } catch (error) {
+                    console.error("Error updating status: ", error);
+                    showAlert(errorAlert, 'Gagal mengubah status produk.', false);
+                }
+            };
+            window.toggleFeaturedStatus = toggleFeaturedStatus;
+
+            // --- Product Management (Link-based) ---
+            const productForm = document.getElementById('productForm');
+            const productFormTitle = document.getElementById('productFormTitle');
+            const addImageLinkBtn = document.getElementById('addImageLinkBtn');
+            const imageLinksContainer = document.getElementById('imageLinksContainer');
+            const productIdToEdit = document.getElementById('productIdToEdit');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            const submitBtn = productForm.querySelector('button[type="submit"]');
+
+            const resetFormForAdd = () => {
+                productForm.reset();
+                productIdToEdit.value = '';
+                quill.root.innerHTML = ''; // Clear Quill editor
+                imageLinksContainer.innerHTML = `
+                    <div class="image-link-input-wrapper" style="margin-bottom: 10px;">
+                        <input type="url" name="productImageLinks" class="form-control image-link-input" placeholder="https://... (Gambar Utama)" required>
+                    </div>`;
+                updateImageLinkBtnVisibility();
+                productFormTitle.innerHTML = '<i class="fas fa-plus-circle"></i> Tambah Produk Baru';
+                submitBtn.textContent = 'Simpan Produk';
+                cancelEditBtn.style.display = 'none';
+            };
+
+            const updateImageLinkBtnVisibility = () => {
+                if (!imageLinksContainer || !addImageLinkBtn) return;
+                const inputCount = imageLinksContainer.querySelectorAll('input').length;
+                addImageLinkBtn.style.display = inputCount >= 5 ? 'none' : 'block';
+            };
+
+            if (addImageLinkBtn) {
+                addImageLinkBtn.addEventListener('click', () => {
+                    const inputCount = imageLinksContainer.querySelectorAll('input').length;
+                    if (inputCount < 5) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'image-link-input-wrapper';
+                        wrapper.style.cssText = 'margin-bottom: 10px; display: flex; gap: 10px; align-items: center;';
+
+                        const newInput = document.createElement('input');
+                        newInput.type = 'url';
+                        newInput.name = 'productImageLinks';
+                        newInput.className = 'form-control image-link-input';
+                        newInput.placeholder = `https://... (Gambar ${inputCount + 1})`;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'btn btn-danger';
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.style.cssText = 'padding: 0.3rem 0.6rem; font-size: 1rem; line-height: 1;';
+                        removeBtn.onclick = () => {
+                            wrapper.remove();
+                            updateImageLinkBtnVisibility();
+                        };
+
+                        wrapper.appendChild(newInput);
+                        wrapper.appendChild(removeBtn);
+                        imageLinksContainer.appendChild(wrapper);
+                        updateImageLinkBtnVisibility();
+                    }
+                });
+            }
+
+            cancelEditBtn.addEventListener('click', resetFormForAdd);
+
+            window.editProduct = async (id) => {
+                try {
+                    const productRef = doc(db, 'products', id);
+                    const productSnap = await getDoc(productRef);
+
+                    if (productSnap.exists()) {
+                        const product = productSnap.data();
+                        
+                        // Populate form fields
+                        productIdToEdit.value = id;
+                        document.getElementById('productName').value = product.name;
+                        document.getElementById('productCategory').value = product.category;
+                        document.getElementById('productPrice').value = product.price;
+                        document.getElementById('productOriginalPrice').value = product.originalPrice || '';
+                        document.getElementById('productRating').value = product.rating || 0;
+                        quill.root.innerHTML = product.description; // Set Quill content
+                        document.getElementById('productLink').value = product.link;
+                        document.getElementById('isFeatured').checked = product.isFeatured;
+
+                        // Populate image links
+                        imageLinksContainer.innerHTML = ''; // Clear existing inputs
+                        product.images.forEach((imageUrl, index) => {
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'image-link-input-wrapper';
+                            wrapper.style.cssText = 'margin-bottom: 10px; display: flex; gap: 10px; align-items: center;';
+
+                            const newInput = document.createElement('input');
+                            newInput.type = 'url';
+                            newInput.name = 'productImageLinks';
+                            newInput.className = 'form-control image-link-input';
+                            newInput.value = imageUrl;
+                            if (index === 0) {
+                                newInput.placeholder = 'https://... (Gambar Utama)';
+                                newInput.required = true;
+                            } else {
+                                newInput.placeholder = `https://... (Gambar ${index + 1})`;
+                            }
+
+                            if (index > 0) { // Add remove button for non-primary images
+                                const removeBtn = document.createElement('button');
+                                removeBtn.type = 'button';
+                                removeBtn.className = 'btn btn-danger';
+                                removeBtn.innerHTML = '&times;';
+                                removeBtn.style.cssText = 'padding: 0.3rem 0.6rem; font-size: 1rem; line-height: 1;';
+                                removeBtn.onclick = () => {
+                                    wrapper.remove();
+                                    updateImageLinkBtnVisibility();
+                                };
+                                wrapper.appendChild(newInput);
+                                wrapper.appendChild(removeBtn);
+                            } else {
+                                wrapper.appendChild(newInput);
+                            }
+                            imageLinksContainer.appendChild(wrapper);
+                        });
+                        updateImageLinkBtnVisibility();
+
+                        // Switch to edit mode
+                        productFormTitle.innerHTML = '<i class="fas fa-edit"></i> Edit Produk';
+                        submitBtn.textContent = 'Update Produk';
+                        cancelEditBtn.style.display = 'inline-block';
+                        
+                        // Scroll to form
+                        productForm.scrollIntoView({ behavior: 'smooth' });
+
+                    } else {
+                        showAlert(errorAlert, 'Produk tidak ditemukan.', false);
+                    }
+                } catch (error) {
+                    console.error("Error fetching product for edit:", error);
+                    showAlert(errorAlert, 'Gagal mengambil data produk.', false);
+                }
+            };
+
+            productForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Menyimpan...';
+
+                try {
+                    const imageUrls = [];
+                    document.querySelectorAll('.image-link-input').forEach(input => {
+                        if (input.value.trim()) {
+                            imageUrls.push(input.value.trim());
+                        }
+                    });
+
+                    if (imageUrls.length === 0) {
+                        throw new Error("Minimal harus ada 1 link gambar produk.");
+                    }
+
+                    const productData = {
+                        name: document.getElementById('productName').value,
+                        category: document.getElementById('productCategory').value,
+                        price: Number(document.getElementById('productPrice').value),
+                        originalPrice: Number(document.getElementById('productOriginalPrice').value) || 0,
+                        rating: Number(document.getElementById('productRating').value) || 0,
+                        description: quill.root.innerHTML, // Get content from Quill
+                        link: document.getElementById('productLink').value,
+                        images: imageUrls,
+                        videos: [], // Keep this consistent
+                        isFeatured: document.getElementById('isFeatured').checked,
+                    };
+
+                    const currentProductId = productIdToEdit.value;
+                    if (currentProductId) {
+                        // Update existing product
+                        const productRef = doc(db, 'products', currentProductId);
+                        await updateDoc(productRef, productData);
+                        showAlert(successAlert, 'Produk berhasil diperbarui!');
+                    } else {
+                        // Add new product
+                        productData.createdAt = serverTimestamp();
+                        await addDoc(collection(db, 'products'), productData);
+                        showAlert(successAlert, 'Produk berhasil disimpan!');
+                    }
+                    
+                    resetFormForAdd();
+                    loadProducts();
+
+                } catch (error) {
+                    console.error("Error saving product:", error);
+                    showAlert(errorAlert, `Gagal menyimpan produk: ${error.message}`, false);
+                } finally {
+                    submitBtn.disabled = false;
+                    // The text is reset in resetFormForAdd
+                }
+            });
+
+            // --- Banner Management (Link-based) ---
+            const bannerForm = document.getElementById('bannerForm');
+            bannerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = bannerForm.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Menyimpan...';
+
+                try {
+                    const imageUrl = document.getElementById('bannerImageUrl').value;
+                    if (!imageUrl) {
+                        throw new Error("Link gambar banner harus diisi.");
+                    }
+
+                    const bannerData = {
+                        title: document.getElementById('bannerTitle').value,
+                        description: document.getElementById('bannerDescription').value,
+                        link: document.getElementById('bannerLink').value,
+                        imageUrl: imageUrl,
+                        createdAt: serverTimestamp()
+                    };
+
+                    await addDoc(collection(db, 'banners'), bannerData);
+                    showAlert(successAlert, 'Banner berhasil disimpan!');
+                    bannerForm.reset();
+                    loadBanners();
+                } catch (error) {
+                    console.error("Error saving banner:", error);
+                    showAlert(errorAlert, `Gagal menyimpan banner: ${error.message}`, false);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Simpan Banner';
+                }
+            });
+
+            const bannersList = document.getElementById('bannersList');
+            async function loadBanners() {
+                bannersList.innerHTML = '<p>Memuat banner...</p>';
+                const querySnapshot = await getDocs(collection(db, "banners"));
+                bannersList.innerHTML = '';
+                if (querySnapshot.empty) {
+                    bannersList.innerHTML = '<p>Belum ada banner.</p>';
+                    return;
+                }
+                querySnapshot.forEach(doc => {
+                    const banner = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'banner-item';
+                    item.innerHTML = `
+                        <div class="banner-image"><img src="${banner.imageUrl}" alt="${banner.title}"></div>
+                        <div class="banner-info">
+                            <h3>${banner.title}</h3>
+                            <div class="product-actions">
+                                <button class="action-btn btn-danger" data-id="${doc.id}" data-type="banner">Hapus</button>
+                            </div>
+                        </div>`;
+                    bannersList.appendChild(item);
+                });
+            }
+
+            // --- Delete Handler ---
+            document.getElementById('adminPanel').addEventListener('click', async (e) => {
+                if (e.target.classList.contains('btn-danger') && e.target.dataset.id) {
+                    const id = e.target.dataset.id;
+                    const type = e.target.dataset.type;
+                    
+                    if (confirm(`Anda yakin ingin menghapus ${type} ini?`)) {
+                        try {
+                            // Note: This doesn't delete the associated image from storage, which is a potential improvement.
+                            await deleteDoc(doc(db, `${type}s`, id));
+                            showAlert(successAlert, `${type.charAt(0).toUpperCase() + type.slice(1)} berhasil dihapus!`);
+                            if (type === 'product') {
+                                loadProducts(); // Reload current page
+                            } else if (type === 'banner') {
+                                loadBanners();
+                            }
+                        } catch (error) {
+                            console.error(`Error deleting ${type}:`, error);
+                            showAlert(errorAlert, `Gagal menghapus ${type}.`, false);
+                        }
+                    }
+                }
+            });
+
+            // --- Initial Load ---
+            loadProducts();
+            loadBanners();
+        }    </script>
+    <script src="js/script.js"></script>
+</body>
+</html>
