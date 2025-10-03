@@ -435,6 +435,11 @@ body {
     font-size: 0.9rem;
 }
 
+/* Hide footer during content load */
+body.loading .footer {
+    display: none;
+}
+
 /* Filter Section (Halaman Produk) */
 .filter-section {
     background-color: var(--card-bg);
@@ -901,4 +906,9 @@ body {
 
 body.dark-mode .video-overlay {
     background-color: rgba(26, 28, 47, 0.7);
+}
+
+/* Add space above footer on product detail page */
+#product-detail-content {
+    margin-bottom: 4rem;
 }
