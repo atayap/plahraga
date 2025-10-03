@@ -1,0 +1,52 @@
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Ganti ke 'master' jika itu nama branch utama Anda
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Create Firebase Config File 🤫
+        run: |
+          mkdir -p js
+          echo "
+          // Import functions from the SDKs
+          import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+          import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+          import { getAuth } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+          import { getStorage } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
+
+          // Your web app's Firebase configuration
+          // Values are injected by GitHub Actions from your repository secrets
+          const firebaseConfig = {
+            apiKey: "${{ secrets.FIREBASE_API_KEY }}",
+            authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN }}",
+            projectId: "${{ secrets.FIREBASE_PROJECT_ID }}",
+            storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET }}",
+            messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}",
+            appId: "${{ secrets.FIREBASE_APP_ID }}"
+          };
+
+          // Initialize Firebase
+          const app = initializeApp(firebaseConfig);
+          const db = getFirestore(app);
+          const auth = getAuth(app);
+          const storage = getStorage(app);
+
+          export { db, auth, storage };
+          " > js/firebase-config.js
+
+      - name: Deploy 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          # Jika Anda menggunakan domain kustom, tambahkan baris di bawah
+          # cname: your.custom.domain.com
