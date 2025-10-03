@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/responsive.css">
 
 </head>
-<body>
+<body class="loading">
     <!-- Header -->
     <header>
         <nav class="navbar">
@@ -60,6 +60,54 @@
     </main>
 
 
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PLAHRAGA</h3>
+                    <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga dibawah 100K.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Menu</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Produk</a></li>
+                        <li><a href="about.html">Tentang Kami</a></li>
+                        <li><a href="#">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Kategori</h4>
+                    <ul>
+                        <li><a href="products.html?category=alat-olahraga">Alat Olahraga</a></li>
+                        <li><a href="products.html?category=pakaian-olahraga">Pakaian Olahraga</a></li>
+                        <li><a href="products.html?category=sepatu-sport">Sepatu Sport</a></li>
+                        <li><a href="products.html?category=aksesoris-olahraga">Aksesoris Olahraga</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Informasi</h4>
+                    <ul>
+                        <li><a href="privacy-policy.html">Kebijakan Privasi</a></li>
+                        <li><a href="#">Syarat & Ketentuan</a></li>
+                        <li><a href="#">Bantuan</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PLAHRAGA. Ataya Fikri</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="js/script.js"></script>
     <script type="module">
@@ -149,6 +197,7 @@
 
             if (!productId) {
                 productDetailContent.innerHTML = '<p style="text-align: center; margin-top: 100px;">ID produk tidak ditemukan.</p>';
+                document.body.classList.remove('loading');
                 return;
             }
 
@@ -157,6 +206,7 @@
 
             if (!productSnap.exists()) {
                 productDetailContent.innerHTML = '<p style="text-align: center; margin-top: 100px;">Produk tidak ditemukan.</p>';
+                document.body.classList.remove('loading');
                 return;
             }
 
@@ -231,6 +281,8 @@
                 `;
                 productDetailContent.appendChild(descriptionSection);
             }
+
+            document.body.classList.remove('loading');
 
             const saveButton = detailContainer.querySelector('.btn-save-bag');
 
