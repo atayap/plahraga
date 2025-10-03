@@ -46,6 +46,10 @@ jobs:
           export { db, auth, storage };
           " > js/firebase-config.js
 
+      - name: Remove .gitignore before deploy 🗑️
+        run: rm .gitignore
+
+
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
