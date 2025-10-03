@@ -19,12 +19,12 @@ jobs:
       - name: Create Firebase Config File 🤫
         run: |
           mkdir -p js
-          echo "
+          echo '
           // Import functions from the SDKs
-          import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-          import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-          import { getAuth } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-          import { getStorage } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+          import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+          import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+          import { getStorage } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
           // Your web app's Firebase configuration
           // Values are injected by GitHub Actions from your repository secrets
@@ -44,7 +44,7 @@ jobs:
           const storage = getStorage(app);
 
           export { db, auth, storage };
-          " > js/firebase-config.js
+          ' > js/firebase-config.js
 
       - name: Remove .gitignore before deploy 🗑️
         run: rm .gitignore
