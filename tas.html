@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tas Belanja - PLAHRAGA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+<body>
+    <video autoplay muted loop id="myVideo">
+        <source src="video/footage.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-logo">
+                    <div class="logo-container">
+                        <img src="images/logo.png" alt="PLAHRAGA Logo" id="logo1" class="logo-image active" style="height: 40px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png" alt="Shopee Logo" id="logo2" class="logo-image" style="height: 40px;">
+                    </div>
+                </a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="products.html" class="nav-link">Produk <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="products.html?category=alat-olahraga">Alat Olahraga</a></li>
+                            <li><a href="products.html?category=pakaian-olahraga">Pakaian Olahraga</a></li>
+                            <li><a href="products.html?category=sepatu-sport">Sepatu Sport</a></li>
+                            <li><a href="products.html?category=aksesoris-olahraga">Aksesoris Olahraga</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">Tentang</a></li>
+                    <li class="nav-item">
+                        <a href="tas.html" class="nav-link nav-bag">
+                            <i class="fas fa-shopping-bag"></i> Tas
+                            <span class="bag-item-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="theme-toggle" class="theme-toggle-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Konten Halaman Tas -->
+    <main class="container bag-page">
+        <h1 class="section-title">Tas Belanja Anda</h1>
+        <div id="bag-items-container">
+            <!-- Item tas akan dimuat di sini -->
+        </div>
+    </main>
+
+
+
+    <script src="js/script.js"></script>
+    <script type="module">
+        import { db, auth } from './js/firebase-config.js';
+        import { collection, getDocs, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        const bagItemsContainer = document.getElementById('bag-items-container');
+        const bagItemCount = document.querySelector('.bag-item-count');
+
+        async function updateBagCount(user) {
+            if (user) {
+                const bagColRef = collection(db, 'users', user.uid, 'bag');
+                const bagSnapshot = await getDocs(bagColRef);
+
+                let validItemsCount = 0;
+                const itemsToDelete = [];
+
+                // Create an array of promises to check each item's existence
+                const existenceChecks = bagSnapshot.docs.map(async (bagDoc) => {
+                    const productId = bagDoc.id;
+                    const productRef = doc(db, "products", productId);
+                    const productSnap = await getDoc(productRef);
+
+                    if (productSnap.exists()) {
+                        return true; // Item is valid
+                    } else {
+                        itemsToDelete.push(productId); // Mark for deletion
+                        return false; // Item is invalid
+                    }
+                });
+
+                // Wait for all checks to complete
+                const results = await Promise.all(existenceChecks);
+                
+                // Count the valid items
+                validItemsCount = results.filter(isValid => isValid).length;
+
+                // Update the UI
+                bagItemCount.textContent = validItemsCount > 99 ? '99+' : validItemsCount;
+                bagItemCount.style.display = validItemsCount > 0 ? 'flex' : 'none';
+
+                // Clean up orphan items in the background
+                if (itemsToDelete.length > 0) {
+                    console.log('Cleaning up orphan bag items:', itemsToDelete);
+                    for (const productId of itemsToDelete) {
+                        const bagItemRef = doc(db, 'users', user.uid, 'bag', productId);
+                        await deleteDoc(bagItemRef);
+                    }
+                }
+            } else {
+                bagItemCount.textContent = '0';
+                bagItemCount.style.display = 'none';
+            }
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp || !timestamp.toDate) {
+                return ''; // Return empty string if timestamp is invalid
+            }
+            const date = timestamp.toDate();
+            const dayNames = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            const day = dayNames[date.getDay()];
+            const dayOfMonth = date.getDate();
+            const month = monthNames[date.getMonth()];
+            const year = date.getFullYear();
+
+            return `${day}, ${dayOfMonth} ${month} ${year}`;
+        }
+
+        async function loadBagItems(user) {
+            bagItemsContainer.innerHTML = '<p>Memuat item...</p>';
+
+            const bagColRef = collection(db, 'users', user.uid, 'bag');
+            const bagSnapshot = await getDocs(bagColRef);
+
+            if (bagSnapshot.empty) {
+                bagItemsContainer.innerHTML = '<div class="empty-bag-message"><h3>Tas Anda masih kosong.</h3><p>Simpan produk yang Anda suka untuk melihatnya di sini.</p></div>';
+                return;
+            }
+
+            bagItemsContainer.innerHTML = ''; // Clear loading message
+
+            // Use Promise.all to load all product details concurrently for better performance
+            const itemPromises = bagSnapshot.docs.map(async (bagDoc) => {
+                const bagItem = bagDoc.data();
+                const productRef = doc(db, "products", bagItem.productId);
+                const productSnap = await getDoc(productRef);
+
+                if (productSnap.exists()) {
+                    return { ...bagItem, product: productSnap.data(), id: productSnap.id };
+                } else {
+                    // Handle case where product might have been deleted
+                    return null;
+                }
+            });
+
+            const loadedItems = (await Promise.all(itemPromises)).filter(item => item !== null);
+
+            // Sort items by addedAt date, newest first
+            loadedItems.sort((a, b) => {
+                const dateA = a.addedAt ? a.addedAt.toMillis() : 0;
+                const dateB = b.addedAt ? b.addedAt.toMillis() : 0;
+                return dateB - dateA; // Newest first
+            });
+
+            loadedItems.forEach(item => {
+                const product = item.product;
+                const formattedDate = formatDate(item.addedAt);
+                const dateHTML = formattedDate ? `<p class="bag-item-date" style="font-size: 0.8em; color: var(--gray); margin-bottom: 5px;">Disimpan: ${formattedDate}</p>` : '';
+
+                const itemEl = document.createElement('div');
+                itemEl.className = 'bag-item';
+                itemEl.innerHTML = `
+                    <div class="bag-item-image">
+                        <a href="product-detail.html?id=${item.id}">
+                            <img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/150'}" alt="${product.name}">
+                        </a>
+                    </div>
+                    <div class="bag-item-info">
+                        ${dateHTML}
+                        <h3><a href="product-detail.html?id=${item.id}" style="text-decoration:none; color:inherit;">${product.name}</a></h3>
+                        <p class="bag-item-price">Rp ${product.price.toLocaleString('id-ID')}</p>
+                    </div>
+                    <button class="btn-remove-from-bag" data-id="${item.id}">Hapus</button>
+                `;
+                bagItemsContainer.appendChild(itemEl);
+            });
+
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.btn-remove-from-bag').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const productIdToRemove = e.target.dataset.id;
+                    const user = auth.currentUser;
+                    if (!user) return;
+
+                    e.target.disabled = true;
+                    e.target.textContent = 'Menghapus...';
+
+                    try {
+                        const bagItemRef = doc(db, 'users', user.uid, 'bag', productIdToRemove);
+                        await deleteDoc(bagItemRef);
+                        // Reload items and update count
+                        loadBagItems(user);
+                        updateBagCount(user);
+                    } catch (error) {
+                        console.error("Error removing from bag: ", error);
+                        e.target.disabled = false;
+                        e.target.textContent = 'Hapus';
+                    }
+                });
+            });
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loadBagItems(user);
+            } else {
+                bagItemsContainer.innerHTML = '<div class="empty-bag-message"><h3>Silakan login untuk melihat tas Anda.</h3><p><a href="login.html">Login di sini</a></p></div>';
+            }
+            updateBagCount(user);
+        });
+
+    </script>
+</body>
+</html>

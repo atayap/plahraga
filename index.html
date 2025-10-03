@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAHRAGA - Toko Online Modern</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <video autoplay muted loop id="myVideo">
+        <source src="video/footage.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <!-- Header dengan Navigasi -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-logo">
+                    <div class="logo-container">
+                        <img src="images/logo.png" alt="PLAHRAGA Logo" id="logo1" class="logo-image active" style="height: 40px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png" alt="Shopee Logo" id="logo2" class="logo-image" style="height: 40px;">
+                    </div>
+                </a>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="products.html" class="nav-link">Produk <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="products.html?category=alat-olahraga">Alat Olahraga</a></li>
+                            <li><a href="products.html?category=pakaian-olahraga">Pakaian Olahraga</a></li>
+                            <li><a href="products.html?category=sepatu-sport">Sepatu Sport</a></li>
+                            <li><a href="products.html?category=aksesoris-olahraga">Aksesoris Olahraga</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link">Tentang</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="tas.html" class="nav-link nav-bag">
+                            <i class="fas fa-shopping-bag"></i> Tas
+                            <span class="bag-item-count">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="theme-toggle" class="theme-toggle-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item" id="user-info" style="display: none;">
+                        <span id="user-email"></span>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="logout-button" class="nav-link">Logout</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Banner Promosi -->
+    <section class="banner-section">
+        <div class="banner-container">
+            <!-- Banners will be loaded dynamically here -->
+        </div>
+        <div class="banner-controls">
+            <a class="prev">&#10094;</a>
+            <div class="dots-container">
+                <!-- Dots will be loaded dynamically here -->
+            </div>
+            <a class="next">&#10095;</a>
+        </div>
+    </section>
+
+    <!-- Produk Unggulan -->
+    <section class="featured-products">
+        <div class="container">
+            <h2 class="section-title">Produk Unggulan</h2>
+            <div class="products-grid" id="featured-products-grid">
+                <!-- Produk unggulan akan dimuat di sini -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PLAHRAGA</h3>
+                    <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga dibawah 100K.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Menu</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Produk</a></li>
+                        <li><a href="about.html">Tentang Kami</a></li>
+                        <li><a href="#">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Kategori</h4>
+                    <ul>
+                        <li><a href="products.html?category=alat-olahraga">Alat Olahraga</a></li>
+                        <li><a href="products.html?category=pakaian-olahraga">Pakaian Olahraga</a></li>
+                        <li><a href="products.html?category=sepatu-sport">Sepatu Sport</a></li>
+                        <li><a href="products.html?category=aksesoris-olahraga">Aksesoris Olahraga</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Informasi</h4>
+                    <ul>
+                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><a href="#">Syarat & Ketentuan</a></li>
+                        <li><a href="#">Bantuan</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PLAHRAGA. Ataya Fikri</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script type="module">
+        import { db, auth } from './js/firebase-config.js';
+        import { collection, query, where, getDocs, limit, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        // Call the banner initializer from script.js
+        if (window.initializeBanner) {
+            window.initializeBanner(db, collection, query, getDocs);
+        }
+
+        const featuredProductsGrid = document.getElementById('featured-products-grid');
+        const userInfo = document.getElementById('user-info');
+        const userEmail = document.getElementById('user-email');
+        const logoutButton = document.getElementById('logout-button');
+        const bagItemCount = document.querySelector('.bag-item-count');
+
+        async function updateBagCount(user) {
+            if (user) {
+                const bagColRef = collection(db, 'users', user.uid, 'bag');
+                const bagSnapshot = await getDocs(bagColRef);
+
+                let validItemsCount = 0;
+                const itemsToDelete = [];
+
+                // Create an array of promises to check each item's existence
+                const existenceChecks = bagSnapshot.docs.map(async (bagDoc) => {
+                    const productId = bagDoc.id;
+                    const productRef = doc(db, "products", productId);
+                    const productSnap = await getDoc(productRef);
+
+                    if (productSnap.exists()) {
+                        return true; // Item is valid
+                    } else {
+                        itemsToDelete.push(productId); // Mark for deletion
+                        return false; // Item is invalid
+                    }
+                });
+
+                // Wait for all checks to complete
+                const results = await Promise.all(existenceChecks);
+                
+                // Count the valid items
+                validItemsCount = results.filter(isValid => isValid).length;
+
+                // Update the UI
+                bagItemCount.textContent = validItemsCount > 99 ? '99+' : validItemsCount;
+                bagItemCount.style.display = validItemsCount > 0 ? 'flex' : 'none';
+
+                // Clean up orphan items in the background
+                if (itemsToDelete.length > 0) {
+                    console.log('Cleaning up orphan bag items:', itemsToDelete);
+                    for (const productId of itemsToDelete) {
+                        const bagItemRef = doc(db, 'users', user.uid, 'bag', productId);
+                        await deleteDoc(bagItemRef);
+                    }
+                }
+            } else {
+                bagItemCount.textContent = '0';
+                bagItemCount.style.display = 'none';
+            }
+        }
+
+        async function loadFeaturedProducts() {
+            const productsCol = collection(db, 'products');
+            const q = query(productsCol, where("isFeatured", "==", true), limit(5));
+            const productSnapshot = await getDocs(q);
+            
+            featuredProductsGrid.innerHTML = ''; // Clear existing products
+
+            if (productSnapshot.empty) {
+                featuredProductsGrid.innerHTML = '<p>Tidak ada produk unggulan saat ini.</p>';
+                return;
+            }
+
+            function truncateProductName(name, wordLimit, charLimit) {
+                if (typeof name !== 'string') return '';
+
+                const words = name.split(' ');
+                if (words.length > wordLimit) {
+                    let truncated = words.slice(0, wordLimit).join(' ');
+                    if (truncated.length > charLimit) {
+                        truncated = truncated.substring(0, charLimit);
+                    }
+                    return truncated + '...';
+                }
+
+                if (name.length > charLimit) {
+                    return name.substring(0, charLimit) + '...';
+                }
+
+                return name;
+            }
+
+            productSnapshot.docs.slice(0, 5).forEach(doc => {
+                const product = doc.data();
+                const productId = doc.id;
+                const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/500x500.png?text=PLAHRAGA';
+                const truncatedName = truncateProductName(product.name, 2, 26);
+
+                const productCardContainer = document.createElement('div');
+                productCardContainer.className = 'product-card-link'; // Keep same class for styling
+                productCardContainer.style.cursor = 'pointer';
+                productCardContainer.addEventListener('click', () => {
+                    const user = auth.currentUser;
+                    if (user) {
+                        window.location.href = `product-detail.html?id=${productId}`;
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                });
+
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <img src="${imageUrl}" alt="${truncatedName}">
+                        ${product.originalPrice > 0 ? '<span class="product-badge">Diskon</span>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3>${truncatedName}</h3>
+                        <p class="product-category">${product.category}</p>
+                        <div class="product-price">
+                            <span class="current-price">Rp ${product.price.toLocaleString('id-ID')}</span>
+                            ${product.originalPrice > 0 ? `<span class="original-price">Rp ${product.originalPrice.toLocaleString('id-ID')}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                productCardContainer.appendChild(productCard);
+                featuredProductsGrid.appendChild(productCardContainer);
+            });
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in.
+                userInfo.style.display = 'block';
+                userEmail.textContent = user.email;
+                logoutButton.style.display = 'block';
+            } else {
+                // User is signed out.
+                userInfo.style.display = 'none';
+                userEmail.textContent = '';
+                logoutButton.style.display = 'none';
+            }
+            updateBagCount(user);
+        });
+
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut(auth).then(() => {
+                // Sign-out successful.
+                window.location.href = 'login.html';
+            }).catch((error) => {
+                // An error happened.
+                console.error('Logout Error:', error);
+            });
+        });
+
+        // Initial Load
+        loadFeaturedProducts();
+    </script>
