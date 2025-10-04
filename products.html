@@ -36,6 +36,12 @@
                     <li class="nav-item">
                         <a href="about.html" class="nav-link">Tentang</a>
                     </li>
+                    <li class="nav-item" id="desktop-search">
+                        <div class="search-container">
+                            <input type="text" id="searchInput" placeholder="Cari produk..." class="search-input">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <a href="tas.html" class="nav-link nav-bag">
                             <i class="fas fa-shopping-bag"></i> Tas
@@ -54,6 +60,9 @@
                         <a href="#" id="logout-button" class="nav-link">Logout</a>
                     </li>
                 </ul>
+                <div id="mobile-search-icon">
+                    <i class="fas fa-search"></i>
+                </div>
                 <div class="hamburger">
                     <span class="bar"></span>
                     <span class="bar"></span>
@@ -61,6 +70,13 @@
                 </div>
             </div>
         </nav>
+        <!-- Mobile Search Dropdown -->
+        <div class="mobile-search-dropdown">
+            <div class="search-container">
+                <input type="text" id="mobileSearchInput" placeholder="Cari produk..." class="search-input">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
     </header>
 
     <!-- Konten Halaman Produk -->
@@ -222,9 +238,12 @@
 
         const sortSelect = document.getElementById('sort');
         const applyFiltersBtn = document.querySelector('.apply-filters');
+        const searchInput = document.getElementById('searchInput');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
 
         async function loadAllProducts() {
             const sortBy = sortSelect.value;
+            const searchTerm = (searchInput.value || mobileSearchInput.value).toLowerCase();
             const productsCol = collection(db, 'products');
             const params = new URLSearchParams(window.location.search);
             const category = params.get('category');
@@ -249,6 +268,13 @@
             productSnapshot.forEach(doc => {
                 products.push({ id: doc.id, ...doc.data() });
             });
+
+            // Filter by search term
+            if (searchTerm) {
+                products = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+            }
 
             // Filter by price range
             const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
@@ -340,6 +366,8 @@
 
         applyFiltersBtn.addEventListener('click', loadAllProducts);
         sortSelect.addEventListener('change', loadAllProducts);
+        searchInput.addEventListener('input', loadAllProducts);
+        mobileSearchInput.addEventListener('input', loadAllProducts);
 
         onAuthStateChanged(auth, (user) => {
             if (user) {

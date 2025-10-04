@@ -19,6 +19,51 @@
         display: flex;
     }
 
+    /* Sembunyikan search bar desktop di tampilan mobile */
+    #desktop-search {
+        display: none;
+    }
+
+    /* Atur ikon search mobile */
+    #mobile-search-icon {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0 1rem;
+        font-size: 1.2rem;
+        color: var(--text-color);
+    }
+
+    /* Sembunyikan container search bar mobile yang lama */
+    #mobile-search {
+        display: none;
+    }
+
+    /* Style untuk dropdown search bar */
+    .mobile-search-dropdown {
+        display: none; /* Sembunyikan secara default */
+        position: fixed;
+        top: 70px; /* Di bawah navbar */
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--background-color);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        z-index: 998; /* Di bawah nav-menu tapi di atas konten lain */
+    }
+
+    .mobile-search-dropdown.active {
+        display: block; /* Tampilkan saat aktif */
+    }
+
+    .mobile-search-dropdown .search-container {
+        width: 100%;
+    }
+
+    .nav-logo {
+        flex-shrink: 0; /* Mencegah logo menyusut */
+    }
+
     #featured-products-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;

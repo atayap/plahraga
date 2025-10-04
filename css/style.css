@@ -194,7 +194,7 @@ body {
 .banner-slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* Memastikan banner terisi penuh, memotong jika perlu */
 }
 
 .banner-slide::after {
@@ -247,16 +247,11 @@ body {
 }
 
 .banner-controls {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    transform: translateY(-50%);
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center the group of controls */
     align-items: center;
-    padding: 0 1.5rem;
-    pointer-events: none;
+    gap: 1.5rem; /* Add space between controls */
+    padding: 1rem 0; /* Add some vertical spacing */
 }
 
 .prev, .next, .dots-container {
@@ -343,8 +338,8 @@ body {
 
 .product-image img {
     width: 100%;
-    height: auto;
-    object-fit: cover;
+    aspect-ratio: 1 / 1; /* Membuat gambar menjadi persegi (rasio 1:1) */
+    object-fit: cover;   /* Memastikan gambar mengisi area tanpa distorsi */
     margin-bottom: 10px;
 }
 
@@ -637,7 +632,7 @@ body.loading .footer {
 
 /* 7 columns for the main product listing page */
 .products-page .products-grid {
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1rem;
 }
 
@@ -923,4 +918,39 @@ body.dark-mode .video-overlay {
 /* Add space above footer on product detail page */
 #product-detail-content {
     margin-bottom: 4rem;
+}
+
+/* Search Bar in Navbar */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 200px;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    width: 250px;
+}
+
+.search-icon {
+    position: absolute;
+    right: 1rem;
+    color: var(--gray);
+    cursor: pointer;
+}
+
+#mobile-search {
+    display: none;
 }
