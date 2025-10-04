@@ -219,3 +219,15 @@ window.initializeBanner = async function(db, collection, query, getDocs) {
         bannerContainer.innerHTML = '<p style="text-align: center; color: red;">Gagal memuat banner.</p>';
     }
 };
+
+// Mobile Search Toggle
+document.addEventListener('DOMContentLoaded', () => {
+    const searchIcon = document.getElementById('mobile-search-icon');
+    const searchDropdown = document.querySelector('.mobile-search-dropdown');
+
+    if (searchIcon && searchDropdown) {
+        searchIcon.addEventListener('click', () => {
+            searchDropdown.classList.toggle('active');
+        });
+    }
+});

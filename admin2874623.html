@@ -425,13 +425,14 @@
                 <!-- Tab: Kelola Banner -->
                 <div class="tab-content" id="bannersTab">
                     <div class="card">
-                        <h2><i class="fas fa-image"></i> Tambah Banner Baru</h2>
+                        <h2 id="bannerFormTitle"><i class="fas fa-image"></i> Tambah Banner Baru</h2>
                         
                         <div class="banner-size-info">
                             <h4><i class="fas fa-info-circle"></i> Informasi Ukuran Banner</h4>
                             <p>Rekomendasi ukuran gambar untuk banner adalah <strong>1200x400 piksel</strong>.</p>
                         </div>
                         <form id="bannerForm">
+                            <input type="hidden" id="bannerIdToEdit">
                             <div class="form-group">
                                 <label for="bannerTitle">Judul Banner</label>
                                 <input type="text" id="bannerTitle" class="form-control" required>
@@ -453,6 +454,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary">Simpan Banner</button>
+                            <button type="button" id="cancelBannerEditBtn" class="btn btn-secondary" style="display: none; margin-left: 10px;">Batal Edit</button>
                         </form>
                     </div>
 
@@ -841,11 +843,25 @@
 
             // --- Banner Management (Link-based) ---
             const bannerForm = document.getElementById('bannerForm');
+            const bannerFormTitle = document.getElementById('bannerFormTitle');
+            const bannerIdToEdit = document.getElementById('bannerIdToEdit');
+            const cancelBannerEditBtn = document.getElementById('cancelBannerEditBtn');
+            const bannerSubmitBtn = bannerForm.querySelector('button[type="submit"]');
+
+            const resetBannerForm = () => {
+                bannerForm.reset();
+                bannerIdToEdit.value = '';
+                bannerFormTitle.innerHTML = '<i class="fas fa-image"></i> Tambah Banner Baru';
+                bannerSubmitBtn.textContent = 'Simpan Banner';
+                cancelBannerEditBtn.style.display = 'none';
+            };
+
+            cancelBannerEditBtn.addEventListener('click', resetBannerForm);
+
             bannerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const submitBtn = bannerForm.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Menyimpan...';
+                bannerSubmitBtn.disabled = true;
+                bannerSubmitBtn.textContent = 'Menyimpan...';
 
                 try {
                     const imageUrl = document.getElementById('bannerImageUrl').value;
@@ -858,26 +874,69 @@
                         description: document.getElementById('bannerDescription').value,
                         link: document.getElementById('bannerLink').value,
                         imageUrl: imageUrl,
-                        createdAt: serverTimestamp()
                     };
 
-                    await addDoc(collection(db, 'banners'), bannerData);
-                    showAlert(successAlert, 'Banner berhasil disimpan!');
-                    bannerForm.reset();
+                    const currentBannerId = bannerIdToEdit.value;
+                    if (currentBannerId) {
+                        // Update existing banner
+                        const bannerRef = doc(db, 'banners', currentBannerId);
+                        await updateDoc(bannerRef, bannerData);
+                        showAlert(successAlert, 'Banner berhasil diperbarui!');
+                    } else {
+                        // Add new banner
+                        bannerData.createdAt = serverTimestamp();
+                        await addDoc(collection(db, 'banners'), bannerData);
+                        showAlert(successAlert, 'Banner berhasil disimpan!');
+                    }
+                    
+                    resetBannerForm();
                     loadBanners();
+
                 } catch (error) {
                     console.error("Error saving banner:", error);
                     showAlert(errorAlert, `Gagal menyimpan banner: ${error.message}`, false);
                 } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Simpan Banner';
+                    bannerSubmitBtn.disabled = false;
+                    // The text is reset in resetBannerForm
                 }
             });
+
+            window.editBanner = async (id) => {
+                try {
+                    const bannerRef = doc(db, 'banners', id);
+                    const bannerSnap = await getDoc(bannerRef);
+
+                    if (bannerSnap.exists()) {
+                        const banner = bannerSnap.data();
+                        
+                        // Populate form fields
+                        bannerIdToEdit.value = id;
+                        document.getElementById('bannerTitle').value = banner.title;
+                        document.getElementById('bannerDescription').value = banner.description;
+                        document.getElementById('bannerLink').value = banner.link || '';
+                        document.getElementById('bannerImageUrl').value = banner.imageUrl;
+
+                        // Switch to edit mode
+                        bannerFormTitle.innerHTML = '<i class="fas fa-edit"></i> Edit Banner';
+                        bannerSubmitBtn.textContent = 'Update Banner';
+                        cancelBannerEditBtn.style.display = 'inline-block';
+                        
+                        // Scroll to form
+                        bannerForm.scrollIntoView({ behavior: 'smooth' });
+
+                    } else {
+                        showAlert(errorAlert, 'Banner tidak ditemukan.', false);
+                    }
+                } catch (error) {
+                    console.error("Error fetching banner for edit:", error);
+                    showAlert(errorAlert, 'Gagal mengambil data banner.', false);
+                }
+            };
 
             const bannersList = document.getElementById('bannersList');
             async function loadBanners() {
                 bannersList.innerHTML = '<p>Memuat banner...</p>';
-                const querySnapshot = await getDocs(collection(db, "banners"));
+                const querySnapshot = await getDocs(query(collection(db, "banners"), orderBy("createdAt", "desc")));
                 bannersList.innerHTML = '';
                 if (querySnapshot.empty) {
                     bannersList.innerHTML = '<p>Belum ada banner.</p>';
@@ -891,7 +950,9 @@
                         <div class="banner-image"><img src="${banner.imageUrl}" alt="${banner.title}"></div>
                         <div class="banner-info">
                             <h3>${banner.title}</h3>
+                            <p>${truncateText(banner.description, 10)}</p>
                             <div class="product-actions">
+                                <button class="action-btn btn-primary" onclick="window.editBanner('${doc.id}')">Edit</button>
                                 <button class="action-btn btn-danger" data-id="${doc.id}" data-type="banner">Hapus</button>
                             </div>
                         </div>`;
