@@ -139,6 +139,11 @@
         font-size: 0.9rem;
     }
 
+    .btn-primary {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+
     .banner-section {
         position: relative; /* Acuan untuk posisi absolut anak */
         margin-top: 70px; /* Jarak dari header */
