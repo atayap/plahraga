@@ -239,6 +239,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
+    text-decoration: none;
 }
 
 .btn-primary:hover {
