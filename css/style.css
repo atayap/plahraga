@@ -996,4 +996,27 @@ body.dark-mode .video-overlay {
 
 .cookie-consent-banner p { margin: 0; }
 .cookie-consent-banner a { color: var(--primary); text-decoration: underline; }
-.cookie-consent-banner .btn { flex-shrink: 0; }
+
+.cookie-consent-actions {
+    display: flex;
+    gap: 1.5rem; /* Menambah jarak antar tombol */
+    flex-shrink: 0;
+}
+
+.btn-secondary {
+    /* Default state: looks like text */
+    background-color: transparent;
+    color: var(--text-color);
+    border: none;
+    border-radius: var(--radius);
+    transition: var(--transition);
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}

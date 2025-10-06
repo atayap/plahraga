@@ -102,8 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const cookieConsentBanner = document.createElement('div');
     cookieConsentBanner.className = 'cookie-consent-banner';
     cookieConsentBanner.innerHTML = `
-        <p>Situs ini menggunakan cookie untuk meningkatkan pengalaman Anda. Dengan melanjutkan, Anda menyetujui <a href="privacy-policy.html">kebijakan privasi</a> kami.</p>
-        <button class="btn btn-primary" id="cookie-accept-btn">Saya Mengerti</button>
+        <p>Situs ini menggunakan cookie untuk fungsionalitas dan analitik. Dengan menerima, Anda membantu kami meningkatkan layanan. Lihat <a href="privacy-policy.html">kebijakan privasi</a> kami.</p>
+        <div class="cookie-consent-actions">
+            <button class="btn btn-secondary" id="cookie-decline-btn">Tolak</button>
+            <button class="btn btn-primary" id="cookie-accept-btn">Terima</button>
+        </div>
     `;
 
     const getCookie = (name) => {
@@ -131,16 +134,24 @@ document.addEventListener('DOMContentLoaded', () => {
             cookieConsentBanner.classList.add('active');
         }, 100);
 
+        const handleConsent = (consentValue) => {
+            setCookie('plahraga_cookie_consent', consentValue, 365); // Set cookie for 1 year
+            cookieConsentBanner.classList.remove('active');
+            // Optional: remove the banner from DOM after transition
+            setTimeout(() => {
+                cookieConsentBanner.remove();
+            }, 500);
+        };
+
         const acceptBtn = document.getElementById('cookie-accept-btn');
+        const declineBtn = document.getElementById('cookie-decline-btn');
+
         if (acceptBtn) {
-            acceptBtn.addEventListener('click', () => {
-                setCookie('plahraga_cookie_consent', 'true', 365); // Set cookie for 1 year
-                cookieConsentBanner.classList.remove('active');
-                // Optional: remove the banner from DOM after transition
-                setTimeout(() => {
-                    cookieConsentBanner.remove();
-                }, 500);
-            });
+            acceptBtn.addEventListener('click', () => handleConsent('accepted'));
+        }
+
+        if (declineBtn) {
+            declineBtn.addEventListener('click', () => handleConsent('declined'));
         }
     }
 });
