@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <link rel="icon" href="images/logo1.jpeg" type="image/jpeg">
     <meta charset="UTF-8">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
+
 <body>
     <video autoplay muted loop id="myVideo">
         <source src="video/footage.mp4" type="video/mp4">
@@ -20,8 +22,10 @@
             <div class="nav-container">
                 <a href="index.html" class="nav-logo">
                     <div class="logo-container">
-                        <img src="images/logo.png" alt="PLAHRAGA Logo" id="logo1" class="logo-image active" style="height: 40px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png" alt="Shopee Logo" id="logo2" class="logo-image" style="height: 40px;">
+                        <img src="images/logo.png" alt="PLAHRAGA Logo" id="logo1" class="logo-image active"
+                            style="height: 40px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png"
+                            alt="Shopee Logo" id="logo2" class="logo-image" style="height: 40px;">
                     </div>
                 </a>
                 <ul class="nav-menu">
@@ -73,7 +77,10 @@
     <!-- Banner Promosi -->
     <section class="banner-section">
         <div class="banner-container">
-            <!-- Banners will be loaded dynamically here -->
+            <!-- Loader akan ditampilkan di sini saat memuat banner -->
+            <div class="loading-indicator">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
         </div>
         <div class="banner-controls">
             <a class="prev">&#10094;</a>
@@ -89,7 +96,10 @@
         <div class="container">
             <h2 class="section-title">Produk Unggulan</h2>
             <div class="products-grid" id="featured-products-grid">
-                <!-- Produk unggulan akan dimuat di sini -->
+                <!-- Loader akan ditampilkan di sini saat memuat produk -->
+                <div class="loading-indicator">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
             </div>
         </div>
     </section>
@@ -100,10 +110,12 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>PLAHRAGA</h3>
-                    <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga rata rata di 50K.</p>
+                    <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga
+                        rata rata di 50K.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/codingataya?igsh=MWs3ejhwN2E5YjhtNQ=="><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/codingataya?igsh=MWs3ejhwN2E5YjhtNQ=="><i
+                                class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
@@ -181,7 +193,7 @@
 
                 // Wait for all checks to complete
                 const results = await Promise.all(existenceChecks);
-                
+
                 // Count the valid items
                 validItemsCount = results.filter(isValid => isValid).length;
 
@@ -206,8 +218,11 @@
         async function loadFeaturedProducts() {
             const productsCol = collection(db, 'products');
             const q = query(productsCol, where("isFeatured", "==", true), limit(5));
+
+            // Tampilkan loader sebelum mengambil data
+            featuredProductsGrid.innerHTML = `<div class="loading-indicator"><i class="fas fa-spinner fa-spin"></i></div>`;
+
             const productSnapshot = await getDocs(q);
-            
             featuredProductsGrid.innerHTML = ''; // Clear existing products
 
             if (productSnapshot.empty) {
@@ -321,4 +336,5 @@
         loadFeaturedProducts();
     </script>
 </body>
+
 </html>
