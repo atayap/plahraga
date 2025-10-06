@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <link rel="icon" href="images/logo1.jpeg" type="image/jpeg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - StyleShop</title>
@@ -133,6 +134,13 @@
                 .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
+                    const userDocRef = doc(db, "users", user.uid);
+                    return getDoc(userDocRef);
+                })
+                .then((docSnap) => {
+                    if (docSnap.exists()) {
+                        localStorage.setItem('username', docSnap.data().username);
+                    }
                     window.location.href = 'index.html';
                 })
                 .catch((error) => {

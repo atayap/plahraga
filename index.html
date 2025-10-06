@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <link rel="icon" href="images/logo1.jpeg" type="image/jpeg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLAHRAGA - Toko Online Modern</title>
@@ -51,9 +52,12 @@
                         </button>
                     </li>
                     <li class="nav-item" id="user-info" style="display: none;">
-                        <span id="user-email"></span>
+                        <a href="#" class="nav-link" id="user-username"></a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="login-button-li">
+                        <a href="login.html" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item" id="logout-button-li" style="display: none;">
                         <a href="#" id="logout-button" class="nav-link">Logout</a>
                     </li>
                 </ul>
@@ -96,11 +100,10 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>PLAHRAGA</h3>
-                    <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga dibawah 100K.</p>
+                    <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga rata rata di 50K.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/codingataya?igsh=MWs3ejhwN2E5YjhtNQ=="><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
@@ -126,9 +129,6 @@
                     <h4>Informasi</h4>
                     <ul>
                         <li><a href="privacy-policy.html">Kebijakan Privasi</a></li>
-                        <li><a href="#">Syarat & Ketentuan</a></li>
-                        <li><a href="#">Bantuan</a></li>
-                        <li><a href="#">FAQ</a></li>
                     </ul>
                 </div>
             </div>
@@ -151,8 +151,10 @@
 
         const featuredProductsGrid = document.getElementById('featured-products-grid');
         const userInfo = document.getElementById('user-info');
-        const userEmail = document.getElementById('user-email');
+        const userUsername = document.getElementById('user-username');
+        const loginButtonLi = document.getElementById('login-button-li');
         const logoutButton = document.getElementById('logout-button');
+        const logoutButtonLi = document.getElementById('logout-button-li');
         const bagItemCount = document.querySelector('.bag-item-count');
 
         async function updateBagCount(user) {
@@ -271,17 +273,34 @@
             });
         }
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // User is signed in.
+                loginButtonLi.style.display = 'none';
+                logoutButtonLi.style.display = 'block';
                 userInfo.style.display = 'block';
-                userEmail.textContent = user.email;
-                logoutButton.style.display = 'block';
+
+                const username = localStorage.getItem('username');
+                if (username) {
+                    userUsername.textContent = username;
+                } else {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        const fetchedUsername = userDocSnap.data().username;
+                        userUsername.textContent = fetchedUsername;
+                        localStorage.setItem('username', fetchedUsername);
+                    } else {
+                        userUsername.textContent = user.email;
+                    }
+                }
             } else {
                 // User is signed out.
+                loginButtonLi.style.display = 'block';
+                logoutButtonLi.style.display = 'none';
                 userInfo.style.display = 'none';
-                userEmail.textContent = '';
-                logoutButton.style.display = 'none';
+                userUsername.textContent = '';
+                localStorage.removeItem('username');
             }
             updateBagCount(user);
         });
@@ -290,6 +309,7 @@
             e.preventDefault();
             signOut(auth).then(() => {
                 // Sign-out successful.
+                localStorage.removeItem('username');
                 window.location.href = 'login.html';
             }).catch((error) => {
                 // An error happened.
@@ -300,3 +320,5 @@
         // Initial Load
         loadFeaturedProducts();
     </script>
+</body>
+</html>
