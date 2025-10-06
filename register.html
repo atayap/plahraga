@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <link rel="icon" href="images/logo1.jpeg" type="image/jpeg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar - StyleShop</title>
@@ -88,6 +89,10 @@
     <div class="register-container">
         <h2>Buat Akun Baru</h2>
         <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" class="form-control" placeholder="Masukkan username Anda" required>
+        </div>
+        <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" class="form-control" placeholder="Masukkan email Anda" required>
         </div>
@@ -104,27 +109,49 @@
 
     <script src="js/script.js"></script>
     <script type="module">
-        import { auth } from './js/firebase-config.js';
+        import { auth, db } from './js/firebase-config.js';
         import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { doc, setDoc, getDocs, collection, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const registerButton = document.getElementById('register-button');
+        const usernameInput = document.getElementById('username');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const errorMessage = document.getElementById('error-message');
 
-        registerButton.addEventListener('click', () => {
+        registerButton.addEventListener('click', async () => {
+            const username = usernameInput.value.trim();
             const email = emailInput.value;
             const password = passwordInput.value;
 
-            if (!email || !password) {
-                errorMessage.textContent = 'Email dan password harus diisi.';
+            if (!username || !email || !password) {
+                errorMessage.textContent = 'Semua field harus diisi.';
                 errorMessage.style.display = 'block';
                 return;
             }
-            
+
             if (password.length < 6) {
                 errorMessage.textContent = 'Password harus minimal 6 karakter.';
                 errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Show loading state
+            registerButton.disabled = true;
+            registerButton.textContent = 'Mendaftar...';
+            errorMessage.style.display = 'none';
+
+            // Check if username already exists
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("username", "==", username));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                errorMessage.textContent = 'Username sudah digunakan. Silakan pilih username lain.';
+                errorMessage.style.display = 'block';
+                // Restore button state
+                registerButton.disabled = false;
+                registerButton.textContent = 'Daftar';
                 return;
             }
 
@@ -132,8 +159,19 @@
                 .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
-                    // Redirect to login page after successful registration
-                    window.location.href = 'login.html';
+                    // Now, save the username in Firestore
+                    const userDocRef = doc(db, "users", user.uid);
+                    return setDoc(userDocRef, {
+                        username: username,
+                        email: email
+                    }).then(() => {
+                        // Also save username to localStorage
+                        localStorage.setItem('username', username);
+                    });
+                })
+                .then(() => {
+                    // Redirect to index page after successful registration and data saving
+                    window.location.href = 'index.html';
                 })
                 .catch((error) => {
                     if (error.code === 'auth/email-already-in-use') {
@@ -142,6 +180,9 @@
                         errorMessage.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
                     }
                     errorMessage.style.display = 'block';
+                    // Restore button state
+                    registerButton.disabled = false;
+                    registerButton.textContent = 'Daftar';
                 });
         });
     </script>
