@@ -955,3 +955,18 @@ body.dark-mode .video-overlay {
 #mobile-search {
     display: none;
 }
+
+/* Loading Indicator */
+.loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 300px; /* Beri tinggi minimal agar terlihat di area kosong */
+    grid-column: 1 / -1; /* Pastikan loader mengambil seluruh lebar grid */
+}
+
+.loading-indicator i {
+    font-size: 3rem; /* Ukuran ikon spinner */
+    color: var(--primary);
+}
