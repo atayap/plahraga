@@ -97,6 +97,52 @@ document.addEventListener('DOMContentLoaded', () => {
             setTheme(newTheme);
         });
     }
+
+    // --- COOKIE CONSENT ---
+    const cookieConsentBanner = document.createElement('div');
+    cookieConsentBanner.className = 'cookie-consent-banner';
+    cookieConsentBanner.innerHTML = `
+        <p>Situs ini menggunakan cookie untuk meningkatkan pengalaman Anda. Dengan melanjutkan, Anda menyetujui <a href="privacy-policy.html">kebijakan privasi</a> kami.</p>
+        <button class="btn btn-primary" id="cookie-accept-btn">Saya Mengerti</button>
+    `;
+
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+
+    const setCookie = (name, value, days) => {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    };
+
+    // Check if consent has been given
+    if (!getCookie('plahraga_cookie_consent')) {
+        body.appendChild(cookieConsentBanner);
+        
+        // Use a small timeout to allow the element to be in the DOM before triggering the transition
+        setTimeout(() => {
+            cookieConsentBanner.classList.add('active');
+        }, 100);
+
+        const acceptBtn = document.getElementById('cookie-accept-btn');
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', () => {
+                setCookie('plahraga_cookie_consent', 'true', 365); // Set cookie for 1 year
+                cookieConsentBanner.classList.remove('active');
+                // Optional: remove the banner from DOM after transition
+                setTimeout(() => {
+                    cookieConsentBanner.remove();
+                }, 500);
+            });
+        }
+    }
 });
 
 // Logo Fader

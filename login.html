@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <link rel="icon" href="images/logo1.jpeg" type="image/jpeg">
     <meta charset="UTF-8">
@@ -16,11 +17,13 @@
             background-color: var(--bg-color);
             transition: background-color 0.3s;
         }
+
         .theme-toggle-container {
             position: absolute;
             top: 1rem;
             right: 1rem;
         }
+
         .login-container {
             background-color: var(--card-bg);
             padding: 2.5rem;
@@ -30,20 +33,24 @@
             max-width: 400px;
             transition: background-color 0.3s;
         }
+
         .login-container h2 {
             text-align: center;
             margin-bottom: 1.5rem;
             color: var(--text-color);
         }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--text-color);
         }
+
         .form-control {
             width: 100%;
             padding: 0.8rem 1rem;
@@ -53,6 +60,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
         }
+
         .btn {
             display: inline-block;
             padding: 0.8rem 1.5rem;
@@ -64,20 +72,24 @@
             text-decoration: none;
             width: 100%;
         }
+
         .btn-primary {
             background-color: #6C63FF;
             color: white;
         }
+
         .error-message {
             color: #F44336;
             font-size: 0.9rem;
             margin-top: 0.5rem;
             display: none;
         }
+
         .switch-form {
             text-align: center;
             margin-top: 1rem;
         }
+
         .switch-form a {
             color: #6C63FF;
             text-decoration: none;
@@ -85,6 +97,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <h2>Login ke StyleShop</h2>
@@ -105,22 +118,23 @@
 
     <script src="js/script.js"></script>
     <script type="module">
-        import { auth } from './js/firebase-config.js';
+        import { auth, db } from './js/firebase-config.js';
         import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const loginButton = document.getElementById('login-button');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const errorMessage = document.getElementById('error-message');
 
-        // Redirect if user is already logged in
+        // Redirect if user is already logged in (for users who navigate back to login page)
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.location.href = 'index.html';
             }
         });
 
-        loginButton.addEventListener('click', () => {
+        loginButton.addEventListener('click', async () => {
             const email = emailInput.value;
             const password = passwordInput.value;
 
@@ -130,14 +144,21 @@
                 return;
             }
 
+            // Disable button and show loading state
+            loginButton.disabled = true;
+            loginButton.textContent = 'Logging in...';
+            errorMessage.style.display = 'none';
+
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
+                    // Correctly get user document from Firestore
                     const userDocRef = doc(db, "users", user.uid);
                     return getDoc(userDocRef);
                 })
                 .then((docSnap) => {
+                    // This block now runs after getDoc is successful
                     if (docSnap.exists()) {
                         localStorage.setItem('username', docSnap.data().username);
                     }
@@ -146,8 +167,13 @@
                 .catch((error) => {
                     errorMessage.textContent = 'Email atau password salah.';
                     errorMessage.style.display = 'block';
+                })
+                .finally(() => {
+                    loginButton.disabled = false;
+                    loginButton.textContent = 'Login';
                 });
         });
     </script>
 </body>
+
 </html>
