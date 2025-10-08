@@ -209,11 +209,13 @@
                     <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga
                         rata rata di 50K.</p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/profile.php?id=61560842377762"><i
+                        <a href="https://www.facebook.com/profile.php?id=61560842377762" target="_blank"><i
                                 class="fab fa-facebook"></i></a>
                         <a href="https://www.instagram.com/codingataya?igsh=MWs3ejhwN2E5YjhtNQ=="><i
                                 class="fab fa-instagram"></i></a>
-                        <a href="https://www.youtube.com/channel/UCAGHN7GhZ6ekEI9MS_pF_uA"><i
+                        <a href="https://whatsapp.com/channel/0029Vb6aL0x4SpkJydWpJK0u" target="_blank"><i
+                                class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.youtube.com/channel/UCAGHN7GhZ6ekEI9MS_pF_uA" target="_blank"><i
                                 class="fab fa-youtube"></i></a>
                     </div>
                 </div>
@@ -363,7 +365,7 @@
             await new Promise(resolve => setTimeout(resolve, 300)); // Simulasi jeda singkat agar loader terlihat
 
             if (productSnapshot.empty) {
-                productsGrid.innerHTML = '<p>Tidak ada produk yang ditemukan untuk kategori ini.</p>';
+                productsGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 2rem 0;">Tidak ada produk yang ditemukan untuk kategori ini.</p>';
                 return;
             }
 
@@ -413,7 +415,7 @@
 
             // If no products match filters, display a message
             if (products.length === 0) {
-                productsGrid.innerHTML = '<p>Tidak ada produk yang cocok dengan kriteria filter Anda.</p>';
+                productsGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 2rem 0;">Tidak ada produk yang cocok dengan kriteria filter Anda.</p>';
                 return;
             }
 
@@ -480,7 +482,17 @@
         applyFiltersBtn.addEventListener('click', loadAllProducts);
 
         if (applyFiltersMobileBtn) {
-            applyFiltersMobileBtn.addEventListener('click', loadAllProducts);
+            applyFiltersMobileBtn.addEventListener('click', () => {
+                // Panggil fungsi untuk memuat produk dengan filter yang diterapkan
+                loadAllProducts();
+
+                // Setelah filter diterapkan, tutup menu mobile
+                const hamburger = document.querySelector(".hamburger");
+                const navMenu = document.querySelector(".nav-menu");
+                hamburger.classList.remove("active");
+                navMenu.classList.remove("active");
+                document.body.classList.remove("menu-open");
+            });
         }
 
         // Event listener untuk link sort mobile: hanya update nilai, jangan load produk

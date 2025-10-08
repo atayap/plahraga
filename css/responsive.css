@@ -175,7 +175,7 @@
     .filter-section-mobile .filter-title-mobile {
         font-size: 1.1rem;
         margin-bottom: 1rem;
-        color: var(--text-color);
+        color: white; /* Diubah dari var(--text-color) menjadi putih */
     }
 
     .filter-section-mobile .filter-group h4 {

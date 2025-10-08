@@ -156,7 +156,7 @@
                     if (docSnap.exists()) {
                         localStorage.setItem('username', docSnap.data().username);
                     }
-                    window.location.href = 'index.html';
+                    window.location.href = 'loading.html'; // Arahkan ke halaman loading
                 })
                 .catch((error) => {
                     errorMessage.textContent = 'Email atau password salah.';
