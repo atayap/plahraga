@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <link rel="icon" href="images/logo1.jpeg" type="image/jpeg">
     <meta charset="UTF-8">
@@ -62,7 +63,8 @@
         }
 
         .logout-btn {
-            background-color: var(--secondary); /* Changed from --danger for consistency */
+            background-color: var(--secondary);
+            /* Changed from --danger for consistency */
             color: white;
             border: none;
             padding: 0.7rem 1.5rem;
@@ -73,7 +75,8 @@
         }
 
         .logout-btn:hover {
-            background-color: #e64a19; /* Darker shade of secondary */
+            background-color: #e64a19;
+            /* Darker shade of secondary */
         }
 
         .admin-content {
@@ -114,8 +117,9 @@
         .form-col {
             flex: 1;
         }
-        
-        .form-control, .form-group select {
+
+        .form-control,
+        .form-group select {
             width: 100%;
             padding: 0.8rem 1rem;
             border: 1px solid var(--border-color);
@@ -126,7 +130,8 @@
             color: var(--text-color);
         }
 
-        .form-control:focus, .form-group select:focus {
+        .form-control:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
@@ -201,7 +206,8 @@
         }
 
         .banner-size-info {
-            background-color: rgba(108, 99, 255, 0.1); /* Use primary with alpha */
+            background-color: rgba(108, 99, 255, 0.1);
+            /* Use primary with alpha */
             padding: 1rem;
             border-radius: var(--radius);
             margin-bottom: 1.5rem;
@@ -226,7 +232,8 @@
             gap: 1.5rem;
         }
 
-        .product-item, .banner-item {
+        .product-item,
+        .banner-item {
             background-color: var(--card-bg);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
@@ -238,23 +245,26 @@
             height: 200px;
             overflow: hidden;
         }
-        
+
         .banner-image {
             height: 150px;
             overflow: hidden;
         }
 
-        .product-image img, .banner-image img {
+        .product-image img,
+        .banner-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .product-info, .banner-info {
+        .product-info,
+        .banner-info {
             padding: 1.5rem;
         }
 
-        .product-info h3, .banner-info h3 {
+        .product-info h3,
+        .banner-info h3 {
             margin-bottom: 0.5rem;
             color: var(--text-color);
         }
@@ -272,7 +282,7 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
-        
+
         .alert {
             padding: 1rem;
             border-radius: var(--radius);
@@ -293,6 +303,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Loading Spinner -->
     <div id="loader" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
@@ -372,7 +383,8 @@
                                 <div class="form-col">
                                     <div class="form-group">
                                         <label for="productRating">Rating (0-5, contoh: 4.5)</label>
-                                        <input type="number" id="productRating" class="form-control" min="0" max="5" step="0.1">
+                                        <input type="number" id="productRating" class="form-control" min="0" max="5"
+                                            step="0.1">
                                     </div>
                                 </div>
                             </div>
@@ -384,7 +396,8 @@
 
                             <div class="form-group">
                                 <label for="productLink">Link Affiliate Shopee</label>
-                                <input type="url" id="productLink" class="form-control" required placeholder="https://...">
+                                <input type="url" id="productLink" class="form-control" required
+                                    placeholder="https://...">
                             </div>
 
                             <div class="form-group">
@@ -395,18 +408,23 @@
                             </div>
 
                             <div class="form-group" id="imageLinkGroup">
-                                <label>Link Gambar Produk (Minimal 1, Maksimal 5)<br><small style="font-weight: normal; color: #6c757d;">Rekomendasi ukuran gambar: 800x800 piksel</small></label>
+                                <label>Link Gambar Produk (Minimal 1, Maksimal 5)<br><small
+                                        style="font-weight: normal; color: #6c757d;">Rekomendasi ukuran gambar: 800x800
+                                        piksel</small></label>
                                 <div id="imageLinksContainer">
                                     <div class="image-link-input-wrapper" style="margin-bottom: 10px;">
-                                        <input type="url" name="productImageLinks" class="form-control image-link-input" placeholder="https://... (Gambar Utama)" required>
+                                        <input type="url" name="productImageLinks" class="form-control image-link-input"
+                                            placeholder="https://... (Gambar Utama)" required>
                                     </div>
                                 </div>
-                                <button type="button" id="addImageLinkBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ Tambah Link Gambar</button>
+                                <button type="button" id="addImageLinkBtn" class="btn btn-secondary"
+                                    style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ Tambah Link Gambar</button>
                             </div>
 
 
                             <button type="submit" class="btn btn-primary">Simpan Produk</button>
-                            <button type="button" id="cancelEditBtn" class="btn btn-secondary" style="display: none; margin-left: 10px;">Batal Edit</button>
+                            <button type="button" id="cancelEditBtn" class="btn btn-secondary"
+                                style="display: none; margin-left: 10px;">Batal Edit</button>
                         </form>
                     </div>
 
@@ -417,7 +435,8 @@
                         </div>
                         <div class="pagination-controls" style="text-align: center; margin-top: 2rem;">
                             <button id="prevPageBtn" class="btn btn-secondary" disabled>Sebelumnya</button>
-                            <span id="pageInfo" style="margin: 0 1rem; display: inline-block; vertical-align: middle;">Halaman 1</span>
+                            <span id="pageInfo"
+                                style="margin: 0 1rem; display: inline-block; vertical-align: middle;">Halaman 1</span>
                             <button id="nextPageBtn" class="btn btn-secondary" disabled>Berikutnya</button>
                         </div>
                     </div>
@@ -427,7 +446,7 @@
                 <div class="tab-content" id="bannersTab">
                     <div class="card">
                         <h2 id="bannerFormTitle"><i class="fas fa-image"></i> Tambah Banner Baru</h2>
-                        
+
                         <div class="banner-size-info">
                             <h4><i class="fas fa-info-circle"></i> Informasi Ukuran Banner</h4>
                             <p>Rekomendasi ukuran gambar untuk banner adalah <strong>1200x400 piksel</strong>.</p>
@@ -451,11 +470,13 @@
 
                             <div class="form-group">
                                 <label for="bannerImageUrl">Link Gambar Banner</label>
-                                <input type="url" id="bannerImageUrl" class="form-control" placeholder="https://..." required>
+                                <input type="url" id="bannerImageUrl" class="form-control" placeholder="https://..."
+                                    required>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Simpan Banner</button>
-                            <button type="button" id="cancelBannerEditBtn" class="btn btn-secondary" style="display: none; margin-left: 10px;">Batal Edit</button>
+                            <button type="button" id="cancelBannerEditBtn" class="btn btn-secondary"
+                                style="display: none; margin-left: 10px;">Batal Edit</button>
                         </form>
                     </div>
 
@@ -539,7 +560,7 @@
                         [{ 'header': [1, 2, 3, false] }],
                         ['bold', 'italic', 'underline', 'strike'],
                         ['link', 'image'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                         ['clean']
                     ]
                 }
@@ -549,7 +570,7 @@
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
             tabBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const tabId = this.getAttribute('data-tab');
                     tabBtns.forEach(b => b.classList.remove('active'));
                     tabContents.forEach(c => c.classList.remove('active'));
@@ -562,7 +583,7 @@
             const prevPageBtn = document.getElementById('prevPageBtn');
             const nextPageBtn = document.getElementById('nextPageBtn');
             const pageInfo = document.getElementById('pageInfo');
-            
+
             let currentPage = 1;
             let lastVisible = null;
             let pageFirstDocs = [null]; // Array to store the first doc of each page for 'prev' logic
@@ -692,7 +713,7 @@
                         newInput.name = 'productImageLinks';
                         newInput.className = 'form-control image-link-input';
                         newInput.placeholder = `https://... (Gambar ${inputCount + 1})`;
-                        
+
                         const removeBtn = document.createElement('button');
                         removeBtn.type = 'button';
                         removeBtn.className = 'btn btn-danger';
@@ -720,7 +741,7 @@
 
                     if (productSnap.exists()) {
                         const product = productSnap.data();
-                        
+
                         // Populate form fields
                         productIdToEdit.value = id;
                         document.getElementById('productName').value = product.name;
@@ -774,7 +795,7 @@
                         productFormTitle.innerHTML = '<i class="fas fa-edit"></i> Edit Produk';
                         submitBtn.textContent = 'Update Produk';
                         cancelEditBtn.style.display = 'inline-block';
-                        
+
                         // Scroll to form
                         productForm.scrollIntoView({ behavior: 'smooth' });
 
@@ -829,7 +850,7 @@
                         await addDoc(collection(db, 'products'), productData);
                         showAlert(successAlert, 'Produk berhasil disimpan!');
                     }
-                    
+
                     resetFormForAdd();
                     loadProducts();
 
@@ -889,7 +910,7 @@
                         await addDoc(collection(db, 'banners'), bannerData);
                         showAlert(successAlert, 'Banner berhasil disimpan!');
                     }
-                    
+
                     resetBannerForm();
                     loadBanners();
 
@@ -909,7 +930,7 @@
 
                     if (bannerSnap.exists()) {
                         const banner = bannerSnap.data();
-                        
+
                         // Populate form fields
                         bannerIdToEdit.value = id;
                         document.getElementById('bannerTitle').value = banner.title;
@@ -921,7 +942,7 @@
                         bannerFormTitle.innerHTML = '<i class="fas fa-edit"></i> Edit Banner';
                         bannerSubmitBtn.textContent = 'Update Banner';
                         cancelBannerEditBtn.style.display = 'inline-block';
-                        
+
                         // Scroll to form
                         bannerForm.scrollIntoView({ behavior: 'smooth' });
 
@@ -966,7 +987,7 @@
                 if (e.target.classList.contains('btn-danger') && e.target.dataset.id) {
                     const id = e.target.dataset.id;
                     const type = e.target.dataset.type;
-                    
+
                     if (confirm(`Anda yakin ingin menghapus ${type} ini?`)) {
                         try {
                             // Note: This doesn't delete the associated image from storage, which is a potential improvement.
@@ -991,4 +1012,5 @@
         }    </script>
     <script src="js/script.js"></script>
 </body>
+
 </html>
