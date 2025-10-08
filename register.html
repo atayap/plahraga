@@ -178,7 +178,7 @@
                 })
                 .then(() => {
                     // Redirect to index page after successful registration and data saving
-                    window.location.href = 'index.html';
+                    window.location.href = 'loading.html'; // Arahkan ke halaman loading
                 })
                 .catch((error) => {
                     if (error.code === 'auth/email-already-in-use') {

@@ -861,7 +861,7 @@ body.loading .footer {
 .product-description {
     margin-top: 2rem;
     line-height: 1.8;
-    color: var(--gray);
+    color: var(--text-color);
 }
 
 .action-buttons {
