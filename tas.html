@@ -13,11 +13,14 @@
 </head>
 
 <body>
-    <video autoplay muted loop id="myVideo">
-        <source src="video/footage.mp4" type="video/mp4">
-    </video>
-    <div class="video-overlay"></div>
-    <!-- Header -->
+    <!-- Container untuk video background -->
+    <div class="background-video-container">
+        <video autoplay muted loop id="myVideo">
+            <source src="video/footage.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+    <!-- Header dengan Navigasi -->
     <header>
         <nav class="navbar">
             <div class="nav-container">
@@ -29,48 +32,25 @@
                             alt="Shopee Logo" id="logo2" class="logo-image" style="height: 40px;">
                     </div>
                 </a>
-                <ul class="nav-menu">
-                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a href="products.html" class="nav-link">Produk <i class="fas fa-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="products.html?category=alat-olahraga">Alat Olahraga</a></li>
-                            <li><a href="products.html?category=pakaian-olahraga">Pakaian Olahraga</a></li>
-                            <li><a href="products.html?category=sepatu-sport">Sepatu Sport</a></li>
-                            <li><a href="products.html?category=aksesoris-olahraga">Aksesoris Olahraga</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="about.html" class="nav-link">Tentang</a></li>
-                    <li class="nav-item">
-                        <a href="tas.html" class="nav-link nav-bag">
-                            <i class="fas fa-shopping-bag"></i> Tas
-                            <span class="bag-item-count">0</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <button id="theme-toggle" class="theme-toggle-btn">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
-                </ul>
-                <div class="hamburger">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
+                <!-- Semua elemen navbar lainnya dihapus sesuai permintaan -->
             </div>
         </nav>
     </header>
 
     <!-- Konten Halaman Tas -->
-    <main class="container bag-page">
+    <main class="container bag-page loading-content">
+        <a href="javascript:history.back()"
+            style="display: inline-block; margin-bottom: 1.5rem; color: white; text-decoration: none; background-color: rgba(255, 255, 255, 0.2); padding: 8px 16px; border-radius: 8px; transition: background-color 0.3s;"
+            onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.3)'"
+            onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.2)'">&larr; Kembali</a>
         <h1 class="section-title">Tas Belanja Anda</h1>
-        <div id="bag-items-container">
-            <!-- Loader akan ditampilkan di sini saat memuat -->
-            <div class="loading-indicator">
-                <i class="fas fa-spinner fa-spin"></i>
-            </div>
+        <!-- Loader akan ditampilkan di sini saat memuat -->
+        <div id="bag-loader" class="loading-indicator" style="display: none; color: white;">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p style="margin-top: 1rem; font-size: 1.2rem;">Memuat produk...</p>
         </div>
+        <!-- Kontainer untuk item tas -->
+        <div id="bag-items-container"></div>
     </main>
 
 
@@ -78,14 +58,17 @@
     <script src="js/script.js"></script>
     <script type="module">
         import { db, auth } from './js/firebase-config.js';
-        import { collection, getDocs, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { collection, getDocs, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; // getDoc diimpor
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
         const bagItemsContainer = document.getElementById('bag-items-container');
-        const bagItemCount = document.querySelector('.bag-item-count');
+        const bagLoader = document.getElementById('bag-loader');
+        const mainContent = document.querySelector('.loading-content');
+
+        let allBagItems = []; // Variable to cache all bag items
 
         async function updateBagCount(user) {
-            if (user) {
+            if (user) { // Fungsi ini dibiarkan untuk logika internal, tapi tidak akan update UI navbar
                 const bagColRef = collection(db, 'users', user.uid, 'bag');
                 const bagSnapshot = await getDocs(bagColRef);
 
@@ -109,13 +92,6 @@
                 // Wait for all checks to complete
                 const results = await Promise.all(existenceChecks);
 
-                // Count the valid items
-                validItemsCount = results.filter(isValid => isValid).length;
-
-                // Update the UI
-                bagItemCount.textContent = validItemsCount > 99 ? '99+' : validItemsCount;
-                bagItemCount.style.display = validItemsCount > 0 ? 'flex' : 'none';
-
                 // Clean up orphan items in the background
                 if (itemsToDelete.length > 0) {
                     console.log('Cleaning up orphan bag items:', itemsToDelete);
@@ -124,9 +100,6 @@
                         await deleteDoc(bagItemRef);
                     }
                 }
-            } else {
-                bagItemCount.textContent = '0';
-                bagItemCount.style.display = 'none';
             }
         }
 
@@ -146,18 +119,23 @@
             return `${day}, ${dayOfMonth} ${month} ${year}`;
         }
 
-        async function loadBagItems(user) {
+        async function initializeBagPage(user) {
+            bagLoader.style.display = 'flex'; // Tampilkan loader
+            bagItemsContainer.style.display = 'none'; // Sembunyikan kontainer item
+
             const bagColRef = collection(db, 'users', user.uid, 'bag');
             const bagSnapshot = await getDocs(bagColRef);
 
             if (bagSnapshot.empty) {
-                bagItemsContainer.innerHTML = '<div class="empty-bag-message"><h3>Tas Anda masih kosong.</h3><p>Simpan produk yang Anda suka untuk melihatnya di sini.</p></div>';
+                allBagItems = [];
+                renderBagItems(); // Render pesan "tas kosong"
+                bagLoader.style.display = 'none'; // Sembunyikan loader
+                bagItemsContainer.style.display = 'block'; // Tampilkan kembali kontainer (untuk pesan 'tas kosong')
+                mainContent.classList.add('loaded'); // Tampilkan pesan "tas kosong"
                 return;
             }
 
-            bagItemsContainer.innerHTML = ''; // Clear loading message
-
-            // Use Promise.all to load all product details concurrently for better performance
+            // Use Promise.all to load all product details concurrently
             const itemPromises = bagSnapshot.docs.map(async (bagDoc) => {
                 const bagItem = bagDoc.data();
                 const productRef = doc(db, "products", bagItem.productId);
@@ -166,21 +144,38 @@
                 if (productSnap.exists()) {
                     return { ...bagItem, product: productSnap.data(), id: productSnap.id };
                 } else {
-                    // Handle case where product might have been deleted
-                    return null;
+                    return null; // Handle case where product might have been deleted
                 }
             });
 
-            const loadedItems = (await Promise.all(itemPromises)).filter(item => item !== null);
+            // Filter out nulls and cache the result
+            allBagItems = (await Promise.all(itemPromises)).filter(item => item !== null);
+
+            renderBagItems(); // Initial render
+            bagLoader.style.display = 'none'; // Sembunyikan loader
+            bagItemsContainer.style.display = 'block'; // Tampilkan kembali kontainer dengan produk di dalamnya
+            mainContent.classList.add('loaded'); // Tampilkan konten dengan fade-in
+        }
+
+        // Function to render items based on the cached list and a search term
+        function renderBagItems() {
+            const filteredItems = allBagItems; // Tidak ada lagi fungsi search
+
+            if (filteredItems.length === 0) {
+                bagItemsContainer.innerHTML = '<div class="empty-bag-message"><h3>Tas Anda masih kosong.</h3><p>Simpan produk yang Anda suka untuk melihatnya di sini.</p></div>';
+                return;
+            }
+
+            bagItemsContainer.innerHTML = ''; // Clear current items
 
             // Sort items by addedAt date, newest first
-            loadedItems.sort((a, b) => {
+            filteredItems.sort((a, b) => {
                 const dateA = a.addedAt ? a.addedAt.toMillis() : 0;
                 const dateB = b.addedAt ? b.addedAt.toMillis() : 0;
                 return dateB - dateA; // Newest first
             });
 
-            loadedItems.forEach(item => {
+            filteredItems.forEach(item => {
                 const product = item.product;
                 const formattedDate = formatDate(item.addedAt);
                 const dateHTML = formattedDate ? `<p class="bag-item-date" style="font-size: 0.8em; color: var(--gray); margin-bottom: 5px;">Disimpan: ${formattedDate}</p>` : '';
@@ -216,8 +211,8 @@
                     try {
                         const bagItemRef = doc(db, 'users', user.uid, 'bag', productIdToRemove);
                         await deleteDoc(bagItemRef);
-                        // Reload items and update count
-                        loadBagItems(user);
+                        // Refetch and re-render after deletion
+                        await initializeBagPage(user);
                         updateBagCount(user);
                     } catch (error) {
                         console.error("Error removing from bag: ", error);
@@ -228,13 +223,21 @@
             });
         }
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                loadBagItems(user);
+                mainContent.classList.remove('loaded'); // Sembunyikan konten dulu
+                await initializeBagPage(user); // Fetch data and render
             } else {
-                bagItemsContainer.innerHTML = '<div class="empty-bag-message"><h3>Silakan login untuk melihat tas Anda.</h3><p><a href="login.html">Login di sini</a></p></div>';
+                // User is signed out.
+                localStorage.removeItem('username');
+                allBagItems = [];
+                bagLoader.style.display = 'none'; // Pastikan loader tersembunyi
+                bagItemsContainer.innerHTML = '<div class="empty-bag-message"><h3>Silakan login untuk melihat tas Anda.</h3><p><a href="login.html" style="color: white; text-decoration: underline;">Login di sini</a></p></div>';
+                mainContent.classList.add('loaded'); // Tampilkan pesan login
             }
-            updateBagCount(user);
+            await updateBagCount(user);
+            // Baris di bawah ini dipindahkan ke dalam blok if/else untuk kontrol yang lebih baik
+            // mainContent.classList.add('loaded');
         });
 
     </script>

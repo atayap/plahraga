@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <link rel="icon" href="images/logo1.jpeg" type="image/jpeg">
     <meta charset="UTF-8">
@@ -9,7 +9,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        /* Override khusus untuk tema gelap di halaman about.html */
+        body {
+            --primary: #8a81ff;
+            /* Ungu yang sedikit lebih terang agar kontras di tema gelap */
+            --bg-color: #1c1a2e;
+            /* Latar belakang ungu sangat gelap */
+            --text-color: #f0f0f5;
+            /* Teks putih keabuan */
+            --card-bg: #2d2a4a;
+            /* Latar belakang kartu/header ungu gelap */
+            --gray: #a9a5c9;
+            /* Abu-abu dengan nuansa ungu */
+            --border-color: #413d65;
+            /* Warna border ungu */
+            --shadow: 0 4px 20px rgba(28, 26, 46, 0.5);
+            /* Bayangan yang lebih sesuai untuk tema gelap */
+        }
+
+        .footer {
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
     <!-- Header dengan Navigasi -->
     <header>
@@ -17,62 +41,34 @@
             <div class="nav-container">
                 <a href="index.html" class="nav-logo">
                     <div class="logo-container">
-                        <img src="images/logo.png" alt="PLAHRAGA Logo" id="logo1" class="logo-image active" style="height: 40px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png" alt="Shopee Logo" id="logo2" class="logo-image" style="height: 40px;">
+                        <img src="images/logo.png" alt="PLAHRAGA Logo" id="logo1" class="logo-image active"
+                            style="height: 40px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png"
+                            alt="Shopee Logo" id="logo2" class="logo-image" style="height: 40px;">
                     </div>
                 </a>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="index.html" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="products.html" class="nav-link">Produk <i class="fas fa-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="products.html?category=alat-olahraga">Alat Olahraga</a></li>
-                            <li><a href="products.html?category=pakaian-olahraga">Pakaian Olahraga</a></li>
-                            <li><a href="products.html?category=sepatu-sport">Sepatu Sport</a></li>
-                            <li><a href="products.html?category=aksesoris-olahraga">Aksesoris Olahraga</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="about.html" class="nav-link">Tentang</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="tas.html" class="nav-link nav-bag">
-                            <i class="fas fa-shopping-bag"></i> Tas
-                            <span class="bag-item-count">0</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <button id="theme-toggle" class="theme-toggle-btn">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item" id="user-info" style="display: none;">
-                        <span id="user-email"></span>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" id="logout-button" class="nav-link">Logout</a>
-                    </li>
-                </ul>
-                <div class="hamburger">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
+                <!-- Semua elemen menu di sebelah kanan dihapus sesuai permintaan -->
             </div>
         </nav>
     </header>
 
     <!-- Konten Halaman Tentang Kami -->
-    <main class="container" style="margin-top: 100px;">
+    <main class="container loading-content" style="margin-top: 100px;">
+        <a href="javascript:history.back()"
+            style="display: inline-block; margin-bottom: 1.5rem; color: var(--text-color); text-decoration: none; background-color: var(--card-bg); padding: 8px 16px; border-radius: 8px; transition: background-color 0.3s; box-shadow: var(--shadow);"
+            onmouseover="this.style.backgroundColor='var(--border-color)'"
+            onmouseout="this.style.backgroundColor='var(--card-bg)'">&larr; Kembali</a>
         <section class="about-section">
             <h1 class="section-title">Tentang PLAHRAGA</h1>
             <div class="about-content">
                 <div class="about-text">
                     <h2>Selamat Datang di PLAHRAGA</h2>
-                    <p>PLAHRAGA adalah Toko Online yang masih membutuhkan pendukung yaitu Shopee. Plahraga dibuat untuk orang orang yang ingin mencari produk produk seputar Fitnes atau pun Olah Raga, ada di Plahraga</p>
-                    <p>Misi kami adalah untuk menyediakan produk-produk kebutuhan Fitnes atau pun Olah Raga diharga dibawah 100K, serta memberikan pengalaman belanja online yang mudah dan terjangkau. Kami berkomitmen untuk selalu mengutamakan Harga yang murah dan ramah dikantong.</p>
+                    <p>PLAHRAGA adalah Toko Online yang masih membutuhkan pendukung yaitu Shopee. Plahraga dibuat untuk
+                        orang orang yang ingin mencari produk produk seputar Fitnes atau pun Olah Raga, ada di Plahraga
+                    </p>
+                    <p>Misi kami adalah untuk menyediakan produk-produk kebutuhan Fitnes atau pun Olah Raga diharga
+                        dibawah 100K, serta memberikan pengalaman belanja online yang mudah dan terjangkau. Kami
+                        berkomitmen untuk selalu mengutamakan Harga yang murah dan ramah dikantong.</p>
                 </div>
                 <div class="about-image">
                     <img src="images/logo1.jpeg" alt="Tentang PLAHRAGA">
@@ -81,66 +77,25 @@
         </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>PLAHRAGA</h3>
-                    <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga rata rata di 50K.</p>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/profile.php?id=61560842377762"><i class="fab fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/codingataya?igsh=MWs3ejhwN2E5YjhtNQ=="><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.youtube.com/channel/UCAGHN7GhZ6ekEI9MS_pF_uA"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Menu</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="products.html">Produk</a></li>
-                        <li><a href="about.html">Tentang Kami</a></li>
-                        <li><a href="#">Kontak</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Kategori</h4>
-                    <ul>
-                        <li><a href="products.html?category=alat-olahraga">Alat Olahraga</a></li>
-                        <li><a href="products.html?category=pakaian-olahraga">Pakaian Olahraga</a></li>
-                        <li><a href="products.html?category=sepatu-sport">Sepatu Sport</a></li>
-                        <li><a href="products.html?category=aksesoris-olahraga">Aksesoris Olahraga</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Informasi</h4>
-                    <ul>
-                        <li><a href="privacy-policy.html">Kebijakan Privasi</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 PLAHRAGA. Ataya Fikri</p>
-            </div>
-        </div>
-    </footer>
-
     <script src="js/script.js"></script>
     <script type="module">
         import { auth, db } from './js/firebase-config.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { collection, getDocs, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const userInfo = document.getElementById('user-info');
-        const userEmail = document.getElementById('user-email');
+        const userUsername = document.getElementById('user-username');
+        const loginButtonLi = document.getElementById('login-button-li');
         const logoutButton = document.getElementById('logout-button');
+        const logoutButtonLi = document.getElementById('logout-button-li');
         const bagItemCount = document.querySelector('.bag-item-count');
+
+        const mainContent = document.querySelector('.loading-content');
 
         async function updateBagCount(user) {
             if (user) {
                 const bagColRef = collection(db, 'users', user.uid, 'bag');
                 const bagSnapshot = await getDocs(bagColRef);
-
                 let validItemsCount = 0;
                 const itemsToDelete = [];
 
@@ -160,7 +115,7 @@
 
                 // Wait for all checks to complete
                 const results = await Promise.all(existenceChecks);
-                
+
                 // Count the valid items
                 validItemsCount = results.filter(isValid => isValid).length;
 
@@ -182,25 +137,45 @@
             }
         }
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // User is signed in.
+                loginButtonLi.style.display = 'none';
+                logoutButtonLi.style.display = 'block';
                 userInfo.style.display = 'block';
-                userEmail.textContent = user.email;
-                logoutButton.style.display = 'block';
+
+                const username = localStorage.getItem('username');
+                if (username) {
+                    userUsername.textContent = username;
+                } else {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        const fetchedUsername = userDocSnap.data().username;
+                        userUsername.textContent = fetchedUsername;
+                        localStorage.setItem('username', fetchedUsername);
+                    } else {
+                        userUsername.textContent = user.email;
+                    }
+                }
             } else {
                 // User is signed out.
+                loginButtonLi.style.display = 'block';
+                logoutButtonLi.style.display = 'none';
                 userInfo.style.display = 'none';
-                userEmail.textContent = '';
-                logoutButton.style.display = 'none';
+                userUsername.textContent = '';
+                localStorage.removeItem('username');
             }
             updateBagCount(user);
+            // Tampilkan konten setelah semua selesai
+            mainContent.classList.add('loaded');
         });
 
         logoutButton.addEventListener('click', (e) => {
             e.preventDefault();
             signOut(auth).then(() => {
                 // Sign-out successful.
+                localStorage.removeItem('username');
                 window.location.href = 'login.html';
             }).catch((error) => {
                 // An error happened.
@@ -209,4 +184,5 @@
         });
     </script>
 </body>
+
 </html>

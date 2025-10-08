@@ -50,11 +50,6 @@
                             <span class="bag-item-count">0</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <button id="theme-toggle" class="theme-toggle-btn">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
                     <li class="nav-item" id="user-info" style="display: none;">
                         <a href="#" class="nav-link" id="user-username"></a>
                     </li>
@@ -113,9 +108,12 @@
                     <p>Toko online terpercaya dengan berbagai list produk Shopee yang pasti nya berkualitas dan harga
                         rata rata di 50K.</p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/profile.php?id=61560842377762"><i class="fab fa-facebook"></i></a>
-                        <a href="https://www.instagram.com/codingataya?igsh=MWs3ejhwN2E5YjhtNQ=="><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.youtube.com/channel/UCAGHN7GhZ6ekEI9MS_pF_uA"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61560842377762"><i
+                                class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/codingataya?igsh=MWs3ejhwN2E5YjhtNQ=="><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UCAGHN7GhZ6ekEI9MS_pF_uA"><i
+                                class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -152,7 +150,7 @@
     <script src="js/script.js"></script>
     <script type="module">
         import { db, auth } from './js/firebase-config.js';
-        import { collection, query, where, getDocs, limit, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { collection, query, where, getDocs, limit, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; // getDoc diimpor
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
         // Call the banner initializer from script.js
@@ -160,6 +158,7 @@
             window.initializeBanner(db, collection, query, getDocs);
         }
 
+        import { generateRatingHTML } from './js/script.js';
         const featuredProductsGrid = document.getElementById('featured-products-grid');
         const userInfo = document.getElementById('user-info');
         const userUsername = document.getElementById('user-username');
@@ -254,10 +253,12 @@
                 const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/500x500.png?text=PLAHRAGA';
                 const truncatedName = truncateProductName(product.name, 2, 26);
 
+                const ratingHTML = generateRatingHTML(product.rating);
+
                 const productCardContainer = document.createElement('div');
                 productCardContainer.className = 'product-card-link'; // Keep same class for styling
                 productCardContainer.style.cursor = 'pointer';
-                productCardContainer.addEventListener('click', () => {
+                productCardContainer.addEventListener('click', () => { // Menggunakan event listener untuk navigasi
                     const user = auth.currentUser;
                     if (user) {
                         window.location.href = `product-detail.html?id=${productId}`;
@@ -275,6 +276,7 @@
                     </div>
                     <div class="product-info">
                         <h3>${truncatedName}</h3>
+                        ${ratingHTML}
                         <p class="product-category">${product.category}</p>
                         <div class="product-price">
                             <span class="current-price">Rp ${product.price.toLocaleString('id-ID')}</span>

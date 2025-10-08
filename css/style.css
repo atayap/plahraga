@@ -24,21 +24,10 @@
     --gray: #8A8D9B;
 }
 
-body.dark-mode {
-    --bg-color: #1a1c2f;
-    --text-color: #F8F9FA;
-    --card-bg: #2A2D43;
-    --footer-bg: #121421;
-    --footer-text: #a0a0a0;
-    --border-color: #444;
-    --gray: #8A8D9B;
-}
-
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
-    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -56,7 +45,6 @@ body {
     width: 100%;
     top: 0;
     z-index: 1000;
-    transition: background-color 0.3s;
 }
 
 .nav-container {
@@ -95,20 +83,6 @@ body {
 }
 
 .nav-link:hover {
-    color: var(--primary);
-}
-
-/* Theme Toggle Button */
-.theme-toggle-btn {
-    background: none;
-    border: none;
-    color: var(--text-color);
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: var(--transition);
-}
-
-.theme-toggle-btn:hover {
     color: var(--primary);
 }
 
@@ -165,6 +139,14 @@ body {
     margin: 3px 0;
     transition: var(--transition);
 }
+
+/* Mobile Nav Icons Wrapper */
+.mobile-nav-icons {
+    display: none; /* Hide on desktop */
+    align-items: center;
+    gap: 1rem; /* Space between search and hamburger */
+}
+
 
 /* Banner Section */
 .banner-container {
@@ -294,6 +276,11 @@ body {
     transition: var(--transition);
 }
 
+.dot.active {
+    background-color: var(--primary);
+    /* Warna ungu sesuai tema */
+}
+
 /* Produk Unggulan */
 .featured-products {
     padding: 4rem 0;
@@ -303,7 +290,8 @@ body {
 .featured-products .section-title,
 .featured-products .product-info h3,
 .featured-products .product-info .product-category,
-.featured-products .product-info .product-price {
+.featured-products .product-info .product-price,
+.featured-products .product-rating .rating-value {
     color: #fff;
 }
 
@@ -363,7 +351,6 @@ body {
     background-color: var(--footer-bg);
     color: var(--footer-text);
     padding: 3rem 0 1rem;
-    transition: background-color 0.3s;
 }
 
 .footer-content {
@@ -501,13 +488,26 @@ body.loading .footer {
 
 .price-inputs {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Tetap pertahankan ini */
+    gap: 1rem; /* Beri jarak antar grup min dan max */
     margin-top: 0.5rem;
+}
+
+.price-input-group {
+    width: 48%; /* Sesuaikan lebar agar pas */
+    display: flex;
+    flex-direction: column;
+}
+
+.price-input-group label {
+    font-size: 0.85em;
+    color: var(--gray);
+    margin-bottom: 0.3rem;
 }
 
 .price-inputs input, .filter-group select {
     width: 100%;
-    padding: 0.8rem 1rem;
+    padding: 0.7rem 1rem; /* Sedikit mengurangi padding vertikal */
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     background-color: var(--bg-color);
@@ -523,7 +523,7 @@ body.loading .footer {
 }
 
 .price-inputs input {
-    width: 45%;
+    width: 100%; /* Input sekarang mengisi .price-input-wrapper */
     padding: 0.5rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
@@ -544,6 +544,29 @@ body.loading .footer {
 
 .apply-filters:hover {
     background-color: #5a52e0;
+}
+
+/* Price Input with Prefix */
+.price-input-wrapper {
+    position: relative;
+    display: flex;
+    width: 100%; /* Wrapper sekarang mengisi .price-input-group */
+}
+
+.price-input-wrapper input {
+    width: 100%; /* Pastikan input mengisi wrapper */
+    padding-left: 35px; /* Beri ruang untuk prefix "Rp" */
+}
+
+.price-input-wrapper::before {
+    content: 'Rp';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    font-size: 0.9em;
+    pointer-events: none; /* Agar bisa klik input di area 'Rp' */
 }
 
 /* About Page */
@@ -633,8 +656,8 @@ body.loading .footer {
 
 /* 7 columns for the main product listing page */
 .products-page .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(5, 1fr); /* Mengatur 5 kolom tetap untuk konsistensi */
+    gap: 1.5rem;
 }
 
 .product-card-link {
@@ -712,9 +735,12 @@ body.loading .footer {
 
 .bag-item-info h3 {
     margin-bottom: 0.5rem;
+    /* Properti di bawah ini memastikan teks yang panjang akan terpotong dengan elipsis (...) */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* Batasi lebar maksimum judul agar tidak mendorong elemen lain. Nilai ini bisa disesuaikan. */
+    max-width: 450px; 
 }
 
 .bag-item-price {
@@ -740,7 +766,9 @@ body.loading .footer {
 .empty-bag-message {
     text-align: center;
     padding: 4rem 0;
-    color: var(--text-color);
+    /* Mengubah warna agar terlihat di background video */
+    color: white; 
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
 /* Logo Animation */
@@ -864,6 +892,18 @@ body.loading .footer {
     background-color: var(--primary);
     color: white;
 }
+
+/* Style untuk menyembunyikan konten saat loading */
+/* Kita targetkan kontainer item secara spesifik, bukan seluruh main content */
+#bag-items-container {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.loading-content.loaded #bag-items-container {
+    opacity: 1;
+}
+
 .btn-buy-now:hover {
     background-color: #5a52e0;
 }
@@ -886,6 +926,15 @@ body.loading .footer {
     border-color: var(--gray);
     cursor: not-allowed;
     opacity: 0.7;
+}
+/* Container untuk video background agar tidak mengganggu elemen lain */
+.background-video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -101; /* Pastikan di paling belakang */
 }
 
 #myVideo {
@@ -910,10 +959,6 @@ body.loading .footer {
     background-color: rgba(0, 0, 0, 0.4);
     z-index: -99;
     transition: background-color 0.3s ease;
-}
-
-body.dark-mode .video-overlay {
-    background-color: rgba(26, 28, 47, 0.7);
 }
 
 /* Add space above footer on product detail page */
@@ -961,9 +1006,11 @@ body.dark-mode .video-overlay {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column; /* Menyusun item secara vertikal */
     width: 100%;
     min-height: 300px; /* Beri tinggi minimal agar terlihat di area kosong */
     grid-column: 1 / -1; /* Pastikan loader mengambil seluruh lebar grid */
+    gap: 1rem; /* Jarak antara spinner dan teks */
 }
 
 .loading-indicator i {
