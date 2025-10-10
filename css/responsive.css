@@ -304,7 +304,7 @@
     }
 
     .product-details-info h1 {
-        font-size: 1.8rem; /* Further reduce font size for smaller screens */
+        font-size: 1.6rem; /* Further reduce font size for smaller screens */
     }
 
     .product-price .current-price {
@@ -390,7 +390,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 150px; /* Atur lebar maksimum sebelum teks terpotong */
+        max-width: 200px; /* Ditingkatkan agar judul tidak terlalu cepat terpotong */
     }
 
     .bag-item-price {
