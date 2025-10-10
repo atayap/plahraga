@@ -162,13 +162,13 @@
                         <div class="price-input-group">
                             <label for="minPrice">Min</label>
                             <div class="price-input-wrapper">
-                                <input type="text" id="minPrice" placeholder="0" value="0">
+                                <input type="text" id="minPrice" placeholder="10.000" value="0">
                             </div>
                         </div>
                         <div class="price-input-group">
                             <label for="maxPrice">Max</label>
                             <div class="price-input-wrapper">
-                                <input type="text" id="maxPrice" placeholder="10.000.000" value="10000000">
+                                <input type="text" id="maxPrice" placeholder="100.000" value="0">
                             </div>
                         </div>
                     </div>
@@ -441,7 +441,7 @@
             products.forEach(product => {
                 const productId = product.id;
                 const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/500x500.png?text=PLAHRAGA';
-                const truncatedName = truncateProductName(product.name, 2, 26);
+                const truncatedName = truncateProductName(product.name, 4, 35); // Meningkatkan batas kata dan karakter
 
                 const ratingHTML = generateRatingHTML(product.rating);
 

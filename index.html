@@ -253,7 +253,7 @@
                 const product = doc.data();
                 const productId = doc.id;
                 const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/500x500.png?text=PLAHRAGA';
-                const truncatedName = truncateProductName(product.name, 2, 26);
+                const truncatedName = truncateProductName(product.name, 4, 35); // Meningkatkan batas kata dan karakter
 
                 const ratingHTML = generateRatingHTML(product.rating);
 
