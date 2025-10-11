@@ -430,6 +430,9 @@
 
                     <div class="card">
                         <h2><i class="fas fa-boxes"></i> Daftar Produk</h2>
+                        <div id="productStats" class="banner-size-info" style="margin-bottom: 1.5rem;">
+                            <p>Memuat statistik produk...</p>
+                        </div>
                         <div class="products-list" id="productsList">
                             <!-- Daftar produk akan ditampilkan di sini -->
                         </div>
@@ -653,6 +656,34 @@
                 nextPageBtn.disabled = querySnapshot.docs.length < productsPerPage;
             }
 
+            async function calculateAndDisplayAveragePrice() {
+                const statsContainer = document.getElementById('productStats');
+                if (!statsContainer) return;
+
+                statsContainer.innerHTML = '<p>Menghitung statistik...</p>';
+
+                try {
+                    const productsCol = collection(db, "products");
+                    const querySnapshot = await getDocs(productsCol);
+
+                    if (querySnapshot.empty) {
+                        statsContainer.innerHTML = '<h4>Statistik Produk</h4><p><strong>Total Produk:</strong> 0</p><p><strong>Rata-rata Harga:</strong> Rp 0</p>';
+                        return;
+                    }
+
+                    let totalPrice = 0;
+                    querySnapshot.forEach(doc => {
+                        totalPrice += doc.data().price || 0;
+                    });
+                    const averagePrice = totalPrice / querySnapshot.size;
+
+                    statsContainer.innerHTML = `<h4>Statistik Produk</h4><p><strong>Total Produk:</strong> ${querySnapshot.size}</p><p><strong>Rata-rata Harga:</strong> Rp ${averagePrice.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>`;
+                } catch (error) {
+                    console.error("Error calculating average price:", error);
+                    statsContainer.innerHTML = '<p style="color: red;">Gagal memuat statistik.</p>';
+                }
+            }
+
             nextPageBtn.addEventListener('click', () => loadProducts('next'));
             prevPageBtn.addEventListener('click', () => loadProducts('prev'));
 
@@ -663,6 +694,7 @@
                         isFeatured: !currentStatus
                     });
                     showAlert(successAlert, 'Status produk berhasil diubah!');
+                    calculateAndDisplayAveragePrice(); // Recalculate stats
                     loadProducts();
                 } catch (error) {
                     console.error("Error updating status: ", error);
@@ -853,6 +885,7 @@
 
                     resetFormForAdd();
                     loadProducts();
+                    calculateAndDisplayAveragePrice(); // Recalculate stats
 
                 } catch (error) {
                     console.error("Error saving product:", error);
@@ -994,8 +1027,10 @@
                             await deleteDoc(doc(db, `${type}s`, id));
                             showAlert(successAlert, `${type.charAt(0).toUpperCase() + type.slice(1)} berhasil dihapus!`);
                             if (type === 'product') {
+                                calculateAndDisplayAveragePrice(); // Recalculate stats
                                 loadProducts(); // Reload current page
                             } else if (type === 'banner') {
+                                // No need to calculate product stats if a banner is deleted
                                 loadBanners();
                             }
                         } catch (error) {
@@ -1009,6 +1044,7 @@
             // --- Initial Load ---
             loadProducts();
             loadBanners();
+            calculateAndDisplayAveragePrice();
         }    </script>
     <script src="js/script.js"></script>
 </body>
